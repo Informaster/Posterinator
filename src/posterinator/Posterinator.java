@@ -16,7 +16,7 @@ public class Posterinator {
      */
     public static void main(String[] args) {
         window w=new window();
-        w.setSize(500, 500);
+        w.setSize(1200, 500);
         w.setVisible(true);
     }
     

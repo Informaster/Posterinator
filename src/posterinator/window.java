@@ -20,8 +20,8 @@ import javax.swing.JFileChooser;
 public class window extends javax.swing.JFrame {
     BufferedImage bi=null;
     BufferedImage bildoriginal=null;
-    BufferedImage[] biB=null;
-    BufferedImage[] bildoriginalB=null;
+    BufferedImage[] biB=new BufferedImage[1000];
+    BufferedImage[] bildoriginalB=new BufferedImage[1000];
     /**
      * Creates new form window
      */
@@ -79,7 +79,8 @@ public class window extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setText(" ");
+        jTextField1.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund\\Labyrinth.jpg");
+        jTextField1.setToolTipText("");
 
         jToggleButton2.setText("Bildbibliothek wählen");
         jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -88,7 +89,7 @@ public class window extends javax.swing.JFrame {
             }
         });
 
-        jTextField2.setText(" ");
+        jTextField2.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund");
 
         jToggleButton3.setText("Poster erstellen");
         jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -97,14 +98,14 @@ public class window extends javax.swing.JFrame {
             }
         });
 
-        jTextField3.setText(" ");
+        jTextField3.setText("10");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField3ActionPerformed(evt);
             }
         });
 
-        jTextField4.setText(" ");
+        jTextField4.setText("10");
 
         jLabel1.setText("Raster wählen:");
 
@@ -141,7 +142,7 @@ public class window extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jTextField2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jToggleButton3)))
                 .addContainerGap())
         );
@@ -195,65 +196,140 @@ public class window extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
 
-    private void Render(){
-        Color[] durchschnittsfarbeB=null;
-        Color durchschnittsfarbeP=null;
-   // if(bildoriginal!=null){
+    private void Render(){ 
         String pfadB=jTextField2.getText();
         String pfadP=jTextField1.getText();
         
-        int rasterX=parseInt(jTextField3.getText());
-        int rasterY=parseInt(jTextField4.getText());        
+       // if(pfadB!="" && pfadP!=""){  
+            System.out.println("Bilder werden geladen...");
+        String[] durchschnittsfarbeB=new String[1000];                //Farben werden als String gespeichert (r,g,b)
+        String[] durchschnittsfarbeP=new String[1000];
+        
+        int rasterX=1;
+        int rasterY=1;
+   // if(bildoriginal!=null){
+        
+            System.out.println("1");
+         String X=jTextField3.getText();
+         try{
+              rasterX=Integer.parseInt(X);
+              System.out.println("Erfolgreich Textfeld 3 ausgelesen! rasterX="+rasterX);
+         }catch(NumberFormatException e){
+             System.out.println("Fehler in Textfeld 3");
+         }
+        
+           
+            
+         String Y=jTextField4.getText();  
+         try{
+             rasterY=Integer.parseInt(Y);
+             System.out.println("Erfolgreich Textfeld 4 ausgelesen! rasterX="+rasterY);
+         }catch(NumberFormatException e){
+             System.out.println("Fehler in Textfeld 4");
+         }
+            
+            System.out.println("Deklarierung");
         
         if (pfadP!=null){
             try {
                 bi=ImageIO.read(new File(pfadP));                
-                bildoriginal=bi; // damit das original noch da ist               
+                bildoriginal=bi; // damit das original noch da ist  
+                System.out.println("Poster gelesen");
             } catch (IOException ex) {
                 System.out.println("Fehler aufgetreten beim Lesen der Datei");
             }
         }
+             System.out.println("berechne Durchschnittsfarbe...");
+       
         
-        File bilder=new File(pfadP);
-        File[] Bild=bilder.listFiles();        
+        for(int x=0;x<rasterX;x++){                   //geht jedes kästchen des raster durch
+            for(int y=0;y<rasterY;y++){
+                System.out.println("  test0:   "+x+";"+y+";"+(x*rasterY+y));
+        /*        
+                
+                int r=0,g=0,b=0,pixelanzahl=0;     
+        System.out.println("    Deklarierung");
+        System.out.println("    Berechne...");
+            for(pixelanzahl=0;pixelanzahl<(int)(Math.sqrt((bi.getWidth()/rasterX)/(bi.getHeight()/rasterY)));pixelanzahl++){
+               
+                int co=bi.getRGB((int)((Math.random()+x)*(bi.getWidth()/rasterX)),(int)((Math.random()+y)*(bi.getHeight()/rasterY)));
+                
+                Color c=new Color(co);
+                r+=c.getRed();
+                g+=c.getGreen();
+                b+=c.getBlue();         
+               System.out.println("        "+pixelanzahl+". Durchgang");
+            }
+        if(pixelanzahl!=0){
+            r/=pixelanzahl;
+            g/=pixelanzahl;
+            b/=pixelanzahl;
+        }
+                System.out.println("    Abgeschlossen");*/       
+       
+                
+                durchschnittsfarbeP[x*rasterY+y]=AverageColor(bi,x*(bi.getWidth()/rasterX),y*(bi.getHeight()/rasterY),bi.getWidth()/rasterX,bi.getHeight()/rasterY); //durchschnittsfarbe posterraster
+                System.out.println("  test1:   "+durchschnittsfarbeP[x*rasterY+y]);
+            }
+             System.out.println("test2");
+        }
+        
+           
+            System.out.println("Durchschnittsfarbe der Rasterkästchen berechnen");
+        
+        File bilder=new File(pfadB);
+        File[] Bild=bilder.listFiles();
+        if(bilder!=null){
+            Bild=bilder.listFiles();  
+        }else{
+            System.out.println("                    FEHLER !!!");;
+        }
+            System.out.println("Bildordner gelesen");
+            System.out.println("Dateien: "+Bild[0]+" ; "+Bild[1]);
         //File[] bilder=(new File(pfadB)).listFiles().getAbsolutePath();
         for(int anzahlbilder=0; anzahlbilder<Bild.length;anzahlbilder++){
             if (Bild[anzahlbilder]!=null){
                 try {
                     biB[anzahlbilder]=ImageIO.read(Bild[anzahlbilder]);                
-                    bildoriginalB[anzahlbilder]=biB[anzahlbilder]; // damit das original noch da ist               
+                    bildoriginalB[anzahlbilder]=biB[anzahlbilder]; // damit das original noch da ist  
+                    System.out.println("Bild gelesen");
                 } catch (IOException ex) {
-                    System.out.println("Fehler aufgetreten beim Lesen der Datei");
+                    System.out.println("Fehler aufgetreten beim Lesen der Datei: "+anzahlbilder+1);
                 }
             }                     
-            durchschnittsfarbeB[anzahlbilder]=getAverageColor(bi);  //durchschnittsfarbe poster         
+            durchschnittsfarbeB[anzahlbilder]=AverageColor(biB[anzahlbilder],0,0,biB[anzahlbilder].getWidth(),biB[anzahlbilder].getHeight());  //durchschnittsfarbe poster         
         }
-               
-        durchschnittsfarbeP=getAverageColor(bi); //durchschnittsfarbe poster
-    
+                 
+            System.out.println("Durchschnittsfarbe der Bilder berechnen");
+            System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
+       // }
+           
+          
        
     //}
         System.out.println("Farbe Bild ");
-        jLabel4.setText("Farbe"+durchschnittsfarbeP);
+        jLabel4.setText("Farbe");
     }
     
-    private Color getAverageColor(BufferedImage bi){
-    
-        int breite=bi.getWidth();
-        int hoehe=bi.getWidth();
-        int r=0,g=0,b=0,pixelanzahl=0;
-    
-        for(pixelanzahl=0;pixelanzahl<Math.sqrt(breite*hoehe);pixelanzahl++){
-            int co=bi.getRGB((int)(Math.random()*hoehe),(int)(Math.random()*breite));
-            Color c=new Color(co);
-            b+=c.getBlue();
-            g+=c.getGreen();
-            r+=c.getRed();         
-        }
+    private String AverageColor(BufferedImage bi,int X,int Y,int breite, int hoehe){   
+        int r=0,g=0,b=0,pixelanzahl=0;     
+        System.out.println("    Deklarierung");
+        System.out.println("    Berechne...");
+            for(pixelanzahl=0;pixelanzahl<Math.sqrt(breite*hoehe);pixelanzahl++){
+                int co=bi.getRGB((int)((Math.random()*breite+X)),(int)((Math.random()*hoehe+Y)));
+                Color c=new Color(co);
+                r+=c.getRed();
+                g+=c.getGreen();
+                b+=c.getBlue();         
+            }
+       
         r/=pixelanzahl;
         g/=pixelanzahl;
         b/=pixelanzahl;
-        return new Color(r,g,b);
+        String C=r+","+g+","+b;
+       
+        System.out.println("    Erfolgreich! Farbe: "+C);
+        return C;       
     }
     
     private void Regression(){
