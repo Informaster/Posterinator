@@ -256,8 +256,26 @@ public class window extends javax.swing.JFrame {
         return new Color(r,g,b);
     }
     
-    
-    
+    private void Regression(){
+        
+        int[][] poster=new int[10][3];
+        int[][] bilder=new int[10][3];  
+        
+        
+        for(int i=0;i<poster.length;i++){
+            for(int j=0;j<bilder.length;i++){
+                if(Abstand(poster[j],bilder[i])<Abstand(poster[j],bilder[i-1])){
+                    bilder[j]=bilder[i];
+                }
+            }
+        }
+        
+        
+        
+    }
+    private double Abstand(int[] a, int[] b){        
+        return Math.sqrt((a[0]-b[0])*(a[0]-b[0])+(a[1]-b[1])*(a[1]-b[1])+(a[2]-b[2])*(a[2]-b[2]));     
+    }
     
     
     
