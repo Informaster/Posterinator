@@ -202,8 +202,8 @@ public class window extends javax.swing.JFrame {
         
        // if(pfadB!="" && pfadP!=""){  
             System.out.println("Bilder werden geladen...");
-        String[] durchschnittsfarbeB=new String[1000];                //Farben werden als String gespeichert (r,g,b)
-        String[] durchschnittsfarbeP=new String[1000];
+        Color[] durchschnittsfarbeB=new Color[1000];                //Farben werden als String gespeichert (r,g,b)
+        Color[] durchschnittsfarbeP=new Color[1000];
         
         int rasterX=1;
         int rasterY=1;
@@ -244,30 +244,7 @@ public class window extends javax.swing.JFrame {
         
         for(int x=0;x<rasterX;x++){                   //geht jedes kästchen des raster durch
             for(int y=0;y<rasterY;y++){
-                System.out.println("  test0:   "+x+";"+y+";"+(x*rasterY+y));
-        /*        
-                
-                int r=0,g=0,b=0,pixelanzahl=0;     
-        System.out.println("    Deklarierung");
-        System.out.println("    Berechne...");
-            for(pixelanzahl=0;pixelanzahl<(int)(Math.sqrt((bi.getWidth()/rasterX)/(bi.getHeight()/rasterY)));pixelanzahl++){
-               
-                int co=bi.getRGB((int)((Math.random()+x)*(bi.getWidth()/rasterX)),(int)((Math.random()+y)*(bi.getHeight()/rasterY)));
-                
-                Color c=new Color(co);
-                r+=c.getRed();
-                g+=c.getGreen();
-                b+=c.getBlue();         
-               System.out.println("        "+pixelanzahl+". Durchgang");
-            }
-        if(pixelanzahl!=0){
-            r/=pixelanzahl;
-            g/=pixelanzahl;
-            b/=pixelanzahl;
-        }
-                System.out.println("    Abgeschlossen");*/       
-       
-                
+                System.out.println("  test0:   "+x+";"+y+";"+(x*rasterY+y));               
                 durchschnittsfarbeP[x*rasterY+y]=AverageColor(bi,x*(bi.getWidth()/rasterX),y*(bi.getHeight()/rasterY),bi.getWidth()/rasterX,bi.getHeight()/rasterY); //durchschnittsfarbe posterraster
                 System.out.println("  test1:   "+durchschnittsfarbeP[x*rasterY+y]);
             }
@@ -287,7 +264,8 @@ public class window extends javax.swing.JFrame {
             System.out.println("Bildordner gelesen");
             System.out.println("Dateien: "+Bild[0]+" ; "+Bild[1]);
         //File[] bilder=(new File(pfadB)).listFiles().getAbsolutePath();
-        for(int anzahlbilder=0; anzahlbilder<Bild.length;anzahlbilder++){
+        int anzahlbilder=0;
+        for(anzahlbilder=0; anzahlbilder<Bild.length;anzahlbilder++){
             if (Bild[anzahlbilder]!=null){
                 try {
                     biB[anzahlbilder]=ImageIO.read(Bild[anzahlbilder]);                
@@ -298,20 +276,38 @@ public class window extends javax.swing.JFrame {
                 }
             }                     
             durchschnittsfarbeB[anzahlbilder]=AverageColor(biB[anzahlbilder],0,0,biB[anzahlbilder].getWidth(),biB[anzahlbilder].getHeight());  //durchschnittsfarbe poster         
+                
         }
-                 
-            System.out.println("Durchschnittsfarbe der Bilder berechnen");
-            System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
-       // }
-           
-          
-       
-    //}
-        System.out.println("Farbe Bild ");
-        jLabel4.setText("Farbe");
+        Color[] dP=new Color[rasterX*rasterY];
+        for(int aP=0;aP<dP.length;aP++){
+            dP[aP]=durchschnittsfarbeP[aP];
+        }
+        Color[] dB=new Color[anzahlbilder];
+        for(int aB=0;aB<anzahlbilder;aB++){
+            dB[aB]=durchschnittsfarbeB[aB];
+        }
+        System.out.println("Durchschnittsfarbe der Bilder berechnen");
+        
+        System.out.println("Farbe Posterraster");
+        for(int a=0;a<dP.length;a++){
+       //    System.out.println(dP[a]);
+        }
+        System.out.println("Farbe Bilder       ");
+        for(int b=0;b<dB.length;b++){
+     //      System.out.println(dB[b]);
+        }
+        Color[] Bildabfolge=Regression(dP,dP);
+        
+        System.out.println("Bildabfolgenfarbe");
+        for(int i=0;i<Bildabfolge.length;i++){
+            System.out.println(Bildabfolge[i]);
+        }
+        
+        System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
+        
     }
     
-    private String AverageColor(BufferedImage bi,int X,int Y,int breite, int hoehe){   
+    private Color AverageColor(BufferedImage bi,int X,int Y,int breite, int hoehe){   
         int r=0,g=0,b=0,pixelanzahl=0;     
         System.out.println("    Deklarierung");
         System.out.println("    Berechne...");
@@ -326,21 +322,34 @@ public class window extends javax.swing.JFrame {
         r/=pixelanzahl;
         g/=pixelanzahl;
         b/=pixelanzahl;
-        String C=r+","+g+","+b;
+        Color C=new Color(r,g,b);
        
         System.out.println("    Erfolgreich! Farbe: "+C);
         return C;       
     }
     
-    private void Regression(){
+    private Color[] Regression(Color[] P, Color[] B){                                   //Finde zu jedem Rasterkästchen des Poster das passendste Bild
         
-        int[][] poster=new int[10][3];
-        int[][] bilder=new int[10][3];  
+        int[][] poster=new int[1000][3];
+        int[][] bilder=new int[1000][3];  
         
+        for(int i=0;i<P.length;i++){
+            poster[i][0]=P[i].getRed();
+            poster[i][1]=P[i].getGreen();
+            poster[i][2]=P[i].getBlue();            
+        }
+        for(int i=0;i<B.length;i++){
+            bilder[i][0]=B[i].getRed();
+            bilder[i][1]=B[i].getGreen();
+            bilder[i][2]=B[i].getBlue();            
+        }
         
-        for(int i=0;i<poster.length;i++){
-            for(int j=0;j<bilder.length;i++){
-                if(Abstand(poster[j],bilder[i])<Abstand(poster[j],bilder[i-1])){
+       for(int i=0;i<3;i++){             //damit wird das einmal verwendete bilder[-1] deklariert
+         //  bilder[1000][i]=0;
+        }
+        for(int j=0;j<poster.length;j++){
+            for(int i=0;i<(bilder.length-1);i++){
+                if(Abstand(poster[j],bilder[i+1])<Abstand(poster[j],bilder[i])){
                     bilder[j]=bilder[i];
                 }
             }
@@ -348,7 +357,15 @@ public class window extends javax.swing.JFrame {
         
         
         
+        
+        Color[] C=new Color[bilder.length];
+        for(int i=0;i<C.length;i++){
+            C[i]=new Color(bilder[i][0],bilder[i][1],bilder[i][2]);
+        }      
+        return C;
     }
+    
+    
     private double Abstand(int[] a, int[] b){        
         return Math.sqrt((a[0]-b[0])*(a[0]-b[0])+(a[1]-b[1])*(a[1]-b[1])+(a[2]-b[2])*(a[2]-b[2]));     
     }
