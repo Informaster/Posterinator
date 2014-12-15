@@ -6,6 +6,7 @@
 package posterinator;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -19,9 +20,7 @@ import javax.swing.JFileChooser;
  */
 public class window extends javax.swing.JFrame {
     BufferedImage bi=null;
-    BufferedImage bildoriginal=null;
     BufferedImage[] biB=new BufferedImage[1000];
-    BufferedImage[] bildoriginalB=new BufferedImage[1000];
     /**
      * Creates new form window
      */
@@ -232,8 +231,7 @@ public class window extends javax.swing.JFrame {
         
         if (pfadP!=null){
             try {
-                bi=ImageIO.read(new File(pfadP));                
-                bildoriginal=bi; // damit das original noch da ist  
+                bi=ImageIO.read(new File(pfadP));      
                 System.out.println("Poster gelesen");
             } catch (IOException ex) {
                 System.out.println("Fehler aufgetreten beim Lesen der Datei");
@@ -268,8 +266,7 @@ public class window extends javax.swing.JFrame {
         for(anzahlbilder=0; anzahlbilder<Bild.length;anzahlbilder++){
             if (Bild[anzahlbilder]!=null){
                 try {
-                    biB[anzahlbilder]=ImageIO.read(Bild[anzahlbilder]);                
-                    bildoriginalB[anzahlbilder]=biB[anzahlbilder]; // damit das original noch da ist  
+                    biB[anzahlbilder]=ImageIO.read(Bild[anzahlbilder]);   
                     System.out.println("Bild gelesen");
                 } catch (IOException ex) {
                     System.out.println("Fehler aufgetreten beim Lesen der Datei: "+anzahlbilder+1);
@@ -290,19 +287,27 @@ public class window extends javax.swing.JFrame {
         
         System.out.println("Farbe Posterraster");
         for(int a=0;a<dP.length;a++){
-       //    System.out.println(dP[a]);
+           System.out.println(a+" : "+dP[a]);
         }
         System.out.println("Farbe Bilder       ");
         for(int b=0;b<dB.length;b++){
-     //      System.out.println(dB[b]);
+           System.out.println(b+" : "+dB[b]);
         }
         Color[] Bildabfolge=Regression(dP,dP);
         
         System.out.println("Bildabfolgenfarbe");
         for(int i=0;i<Bildabfolge.length;i++){
-            System.out.println(Bildabfolge[i]);
+            System.out.println( i+" : "+Bildabfolge[i]);
         }
         
+        //Ab hier wird gezeichnet
+        
+        BufferedImage[] biRaster=new BufferedImage[Bildabfolge.length];
+        Graphics2D[] g_biRaster=new Graphics2D[Bildabfolge.length];
+        for(int i=0;i<Bildabfolge.length;i++){
+            biRaster[i]=new BufferedImage(bi.getWidth()/rasterX,bi.getHeight()/rasterY,BufferedImage.TYPE_INT_ARGB);        
+            g_biRaster[i]=biRaster[i].createGraphics();
+        }
         System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
         
     }
@@ -324,6 +329,14 @@ public class window extends javax.swing.JFrame {
         b/=pixelanzahl;
         Color C=new Color(r,g,b);
        
+        
+        
+        
+        
+        
+        
+        
+        
         System.out.println("    Erfolgreich! Farbe: "+C);
         return C;       
     }
@@ -347,18 +360,15 @@ public class window extends javax.swing.JFrame {
        for(int i=0;i<3;i++){             //damit wird das einmal verwendete bilder[-1] deklariert
          //  bilder[1000][i]=0;
         }
-        for(int j=0;j<poster.length;j++){
-            for(int i=0;i<(bilder.length-1);i++){
+        for(int j=0;j<P.length;j++){
+            for(int i=0;i<B.length;i++){
                 if(Abstand(poster[j],bilder[i+1])<Abstand(poster[j],bilder[i])){
                     bilder[j]=bilder[i];
                 }
             }
-        }
+        }      
         
-        
-        
-        
-        Color[] C=new Color[bilder.length];
+        Color[] C=new Color[P.length];
         for(int i=0;i<C.length;i++){
             C[i]=new Color(bilder[i][0],bilder[i][1],bilder[i][2]);
         }      
