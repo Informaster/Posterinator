@@ -78,7 +78,7 @@ public class window extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\IMG_6253.JPG");
+        jTextField1.setText("H:\\Informatik\\Arthür\\Tom.jpg");
         jTextField1.setToolTipText("");
 
         jToggleButton2.setText("Bildbibliothek wählen");
@@ -88,7 +88,7 @@ public class window extends javax.swing.JFrame {
             }
         });
 
-        jTextField2.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Posterinator");
+        jTextField2.setText("H:\\Informatik\\Arthür");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
@@ -226,7 +226,7 @@ public class window extends javax.swing.JFrame {
          String Y=jTextField4.getText();  
          try{
              rasterY=Integer.parseInt(Y);
-             System.out.println("Erfolgreich Textfeld 4 ausgelesen! rasterX="+rasterY);
+             System.out.println("Erfolgreich Textfeld 4 ausgelesen! rasterY="+rasterY);
          }catch(NumberFormatException e){
              System.out.println("Fehler in Textfeld 4");
          }
@@ -301,17 +301,21 @@ public class window extends javax.swing.JFrame {
         for(int b=0;b<dB.length;b++){
            System.out.println(b+" : "+dB[b]);
         }
-        String[] Bildabfolge=Regression(dP,dB);
+        String[] Bildabfolge=new String[dP.length];
+        Bildabfolge=Regression(dP,dB);
         Color[] Bildfarben=new Color[Bildabfolge.length];
         int[] Bildnummern=new int[Bildabfolge.length];
         for(int i=0;i<Bildabfolge.length;i++){
-    //        String[] a=Bildabfolge.split("");
+            String[] a=Bildabfolge[i].split(":");    //a[0] gibt den linken Teil des Array (Farbwerte) und  a[1] den rechten Teil (BildNr) an
+            String[] b=a[0].split(","); //b teilt den Farbstring in die 3 Komponenten auf.
+            Bildfarben[i]=new Color(Integer.parseInt(b[0]),Integer.parseInt(b[1]),Integer.parseInt(b[2]));
+            Bildnummern[i]=Integer.parseInt(a[1]);
         }
         
         
         System.out.println("Bildabfolgenfarbe");
         for(int i=0;i<Bildabfolge.length;i++){
-            System.out.println( i+" : "+Bildabfolge[i]);
+            System.out.println( (i+1)+" : Farbe:"+Bildfarben[i]+"  von Bild mit Nr "+(Bildnummern[i]+1));
         }
         
         //Ab hier wird gezeichnet
@@ -349,9 +353,9 @@ public class window extends javax.swing.JFrame {
     
     private String[] Regression(Color[] P, Color[] B){                                   //Finde zu jedem Rasterkästchen des Poster das passendste Bild
         
-        int[][] poster=new int[1000][3];
-        int[][] bilder=new int[1000][3]; 
-        int[] bildNr=new int[bilder.length];
+        int[][] poster=new int[P.length][3];
+        int[][] bilder=new int[B.length][3]; 
+        int[] bildNr=new int[P.length];
         String[] bild=new String[bilder.length];
         
         for(int i=0;i<P.length;i++){
@@ -365,12 +369,17 @@ public class window extends javax.swing.JFrame {
             bilder[i][2]=B[i].getBlue();            
         }
         
-       
+        int[][] Xbilder=new int[P.length][3];
         for(int j=0;j<P.length;j++){          
             bildNr[j]=kleinsterAbstand(poster[j],bilder);
-            bilder[j]=bilder[bildNr[j]];
-            bild[j]=bilder[j]+"."+bildNr[j];
-        }                           
+        }
+        for(int j=0;j<B.length;j++){            
+            Xbilder[j]=bilder[bildNr[j]];
+            bilder[bildNr[j]]=null;
+            bild[j]=Xbilder[j][0]+","+Xbilder[j][1]+","+Xbilder[j][2]+":"+bildNr[j];
+            System.out.println("    BildNr: "+(bildNr[j]+1)+" von "+bilder.length);
+        }
+      //  int sad=2;
         return bild;
     }
     
@@ -386,9 +395,14 @@ public class window extends javax.swing.JFrame {
         return nr;
         
     }
-            
+    
+    /**
+     * Abstand der Farbvektoren wird berechnet
+     * a entspricht der Durchschnittsfarbe eines Rasterkästchens des Posters
+     * b entspricht allen Durchschnittsfarben der Bilder aus der Bildbibliothek
+    */
     private double Abstand(int[] a, int[] b){        
-        return Math.sqrt((a[0]-b[0])*(a[0]-b[0])+(a[1]-b[1])*(a[1]-b[1])+(a[2]-b[2])*(a[2]-b[2]));     
+        return (a[0]-b[0])*(a[0]-b[0])+(a[1]-b[1])*(a[1]-b[1])+(a[2]-b[2])*(a[2]-b[2]);     
     }
     
     
