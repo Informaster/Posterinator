@@ -5,6 +5,8 @@
  */
 package posterinator;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author Arthur
@@ -16,7 +18,7 @@ public class Posterinator {
      */
     public static void main(String[] args) {
         window w=new window();
-        w.setSize(700, 500);
+        w.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         w.setVisible(true);
     }
     

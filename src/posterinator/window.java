@@ -8,7 +8,9 @@ package posterinator;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import static java.lang.Integer.parseInt;
@@ -18,6 +20,7 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.plugins.jpeg.JPEGImageReadParam;
 import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.ImageInputStream;
 import javax.swing.JFileChooser;
 
 /**
@@ -26,7 +29,8 @@ import javax.swing.JFileChooser;
  */
 public class window extends javax.swing.JFrame {
     BufferedImage bi=null;
-    BufferedImage biB=null;
+    BufferedImage biDoppelt=new BufferedImage(6000,6000,BufferedImage.TYPE_INT_RGB);;
+    
     /**
      * Creates new form window
      */
@@ -72,7 +76,7 @@ public class window extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 273, Short.MAX_VALUE)
+            .addGap(0, 294, Short.MAX_VALUE)
         );
 
         jToggleButton1.setText("Bild wählen");
@@ -82,7 +86,7 @@ public class window extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund\\abstract_bunt.jpg");
+        jTextField1.setText("J:\\Dokumente und Einstellungen\\Arthur\\Eigene Dateien\\Eigene Bilder\\Rom 25.-31.10.2014 (Samsung Kamera)\\SAM_3180.jpg");
         jTextField1.setToolTipText("");
 
         jToggleButton2.setText("Bildbibliothek wählen");
@@ -92,7 +96,8 @@ public class window extends javax.swing.JFrame {
             }
         });
 
-        jTextField2.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Posterinator2");
+        jTextField2.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund");
+        jTextField2.setToolTipText("");
 
         jToggleButton3.setText("Poster erstellen");
         jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -125,31 +130,29 @@ public class window extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jToggleButton3)
-                            .addGap(0, 0, Short.MAX_VALUE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(32, 32, 32)
-                            .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jToggleButton4))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                            .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jToggleButton3))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jToggleButton4)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -206,7 +209,7 @@ public class window extends javax.swing.JFrame {
        /*
        Geschwnidigkeit: 10000 Bilder pro Stunde
        Test:
-       1.: 200x100; 612 Bilder; Zeit Beginn: 15:20 (01.01.2015); Ende:        
+       1.: 200x100; 612 Bilder; Zeit 2h      
        */
       
     }//GEN-LAST:event_jToggleButton3ActionPerformed
@@ -227,12 +230,12 @@ public class window extends javax.swing.JFrame {
             param.setCompressionQuality(1.0F); //Qualität wird auf Maximum (1.0) gesetzt            
             FileImageOutputStream output = new FileImageOutputStream(f);
             writer.setOutput(output);
-            IIOImage image = new IIOImage(bi, null, null);
+            IIOImage image = new IIOImage(biDoppelt, null, null);
             writer.write(null, image, param);
-            writer.dispose();
-            writer.write(bi);
-            */
-            ImageIO.write(bi,"jpg",f);
+            writer.dispose();*/
+           // writer.write(bi);
+            
+            ImageIO.write(biDoppelt,"png",f);
         } catch (IOException ex) {
             System.out.println("Problem beim Speichern aufgetreten!");
         }
@@ -315,20 +318,20 @@ public class window extends javax.swing.JFrame {
         Color[] durchschnittsfarbeB=new Color[anzahlbilder]; 
         
              System.out.println("Durchschnittsfarbe der Bilder berechnen");
+             System.out.println("Anzahl Bilder: "+anzahlbilder);
         for(anzahlbilder=0; anzahlbilder<Bild.length;anzahlbilder++){
             if (Bild[anzahlbilder]!=null){
                 try {
-                    biB=ImageIO.read(Bild[anzahlbilder]);  
+                    BufferedImage biB=ImageIO.read(Bild[anzahlbilder]);  
+                    durchschnittsfarbeB[anzahlbilder]=AverageColor(biB,0,0,biB.getWidth(),biB.getHeight());  //Durchschnittsfarbe Bildbibliothekbilder         
+                    biB=null;   
                     System.out.println("Bild gelesen : "+(anzahlbilder+1)+" von "+Bild.length);
                 } catch (IOException ex) {
                     System.out.println("Fehler aufgetreten beim Lesen der Datei: "+(anzahlbilder+1));
                 }
             }                     
-            durchschnittsfarbeB[anzahlbilder]=AverageColor(biB,0,0,biB.getWidth(),biB.getHeight());  //Durchschnittsfarbe Bildbibliothekbilder         
-                
-        }     
-       
-        
+            
+        }   
         System.out.println("Farbe Posterraster");
         for(int a=0;a<durchschnittsfarbeP.length;a++){
            System.out.println(a+" : "+durchschnittsfarbeP[a]);
@@ -352,21 +355,34 @@ public class window extends javax.swing.JFrame {
       
         
         Graphics2D g_bi=bi.createGraphics();
-        BufferedImage bildPoster=null;
+       // BufferedImage biDoppelt=null;
+       // biDoppelt=bi;
+        
+        Graphics2D g_biDoppelt=biDoppelt.createGraphics();     
+        g_bi.setColor(new Color(255,255,255));
+        g_bi.fillRect(0,0,bi.getWidth(),bi.getHeight());
+        g_biDoppelt.setColor(new Color(255,255,255));
+        g_biDoppelt.fillRect(0,0,bi.getWidth(),bi.getHeight());
         for(int x=0;x<rasterX;x++){
             for(int y=0;y<rasterY;y++){
                 try{
-                    bildPoster=ImageIO.read(Bild[Bildnummern[x*rasterY+y]]);
+                    BufferedImage bildPoster=ImageIO.read(Bild[Bildnummern[x*rasterY+y]]);
+                    int breiteR=bi.getWidth()/rasterX;
+                    int hoeheR=bi.getHeight()/rasterY;
+                    int hoeheD=biDoppelt.getHeight()/rasterY;
+                    int breiteD=biDoppelt.getWidth()/rasterX;
+                    g_biDoppelt.drawImage(bildPoster, x*breiteD,y*breiteD,breiteD,hoeheD,this);
+                    g_bi.drawImage(bildPoster, x*breiteR,y*hoeheR,breiteR,hoeheR,this);
+               
                 }catch(IOException ex){
                     System.out.println("Fehler aufgetreten beim Lesen der Datei: "+(x*rasterY+y+1));
                 }             
-                int breiteR=bi.getWidth()/rasterX;
-                int hoeheR=bi.getHeight()/rasterY;
-                g_bi.drawImage(bildPoster, x*breiteR,y*hoeheR,breiteR,hoeheR,this);
-                System.out.println(x*rasterY+y);
+                
+                System.out.println((x*rasterY+y)+" /"+(rasterX*rasterY));
               
             }
         }
+       
         
         System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");       
        
