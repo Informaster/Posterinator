@@ -29,7 +29,7 @@ import javax.swing.JFileChooser;
  */
 public class window extends javax.swing.JFrame {
     BufferedImage bi=null;
-    BufferedImage biDoppelt=new BufferedImage(6000,6000,BufferedImage.TYPE_INT_RGB);;
+    BufferedImage biDoppelt=new BufferedImage(5000,5000,BufferedImage.TYPE_INT_RGB); //nicht höher als 5000 setzen sonst OutOfMemoryError!
     
     /**
      * Creates new form window
@@ -96,7 +96,7 @@ public class window extends javax.swing.JFrame {
             }
         });
 
-        jTextField2.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund");
+        jTextField2.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Posterinator2");
         jTextField2.setToolTipText("");
 
         jToggleButton3.setText("Poster erstellen");
@@ -378,7 +378,7 @@ public class window extends javax.swing.JFrame {
                     System.out.println("Fehler aufgetreten beim Lesen der Datei: "+(x*rasterY+y+1));
                 }             
                 
-                System.out.println((x*rasterY+y)+" /"+(rasterX*rasterY));
+                System.out.println((x*rasterY+y+1)+" /"+(rasterX*rasterY)+"  ("+((x*rasterY+y+1)/(rasterX*rasterY)*100)+"%)");
               
             }
         }
