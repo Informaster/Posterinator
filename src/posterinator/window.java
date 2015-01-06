@@ -65,6 +65,7 @@ public class window extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jToggleButton4 = new javax.swing.JToggleButton();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -76,7 +77,7 @@ public class window extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 294, Short.MAX_VALUE)
+            .addGap(0, 285, Short.MAX_VALUE)
         );
 
         jToggleButton1.setText("Bild wählen");
@@ -86,7 +87,6 @@ public class window extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setText("J:\\Dokumente und Einstellungen\\Arthur\\Eigene Dateien\\Eigene Bilder\\Rom 25.-31.10.2014 (Samsung Kamera)\\SAM_3180.jpg");
         jTextField1.setToolTipText("");
 
         jToggleButton2.setText("Bildbibliothek wählen");
@@ -96,7 +96,6 @@ public class window extends javax.swing.JFrame {
             }
         });
 
-        jTextField2.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Posterinator2");
         jTextField2.setToolTipText("");
 
         jToggleButton3.setText("Poster erstellen");
@@ -105,10 +104,6 @@ public class window extends javax.swing.JFrame {
                 jToggleButton3ActionPerformed(evt);
             }
         });
-
-        jTextField3.setText("10");
-
-        jTextField4.setText("10");
 
         jLabel1.setText("Raster wählen:");
 
@@ -122,6 +117,8 @@ public class window extends javax.swing.JFrame {
                 jToggleButton4ActionPerformed(evt);
             }
         });
+
+        jLabel4.setText("jLabel4");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -152,7 +149,10 @@ public class window extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jToggleButton4)))
+                        .addComponent(jToggleButton4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -176,7 +176,8 @@ public class window extends javax.swing.JFrame {
                     .addComponent(jToggleButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4))
         );
 
         pack();
@@ -302,7 +303,7 @@ public class window extends javax.swing.JFrame {
         }
         
         
-       
+        jLabel4.setText("Lesen...");
         
         File bilder=new File(pfadB);   // Lesen der Bildbibiliothek
         File[] Bild=bilder.listFiles();
@@ -352,7 +353,7 @@ public class window extends javax.swing.JFrame {
         
         //Ab hier wird gezeichnet------------------------------
         
-      
+        jLabel4.setText("Zeichnen...");
         
         Graphics2D g_bi=bi.createGraphics();
        // BufferedImage biDoppelt=null;
@@ -542,6 +543,7 @@ public class window extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
