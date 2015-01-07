@@ -29,7 +29,7 @@ import javax.swing.JFileChooser;
  */
 public class window extends javax.swing.JFrame {
     BufferedImage bi=null;
-    BufferedImage biDoppelt=new BufferedImage(5000,5000,BufferedImage.TYPE_INT_RGB); //nicht höher als 5000 setzen sonst OutOfMemoryError!
+    BufferedImage biDoppelt=new BufferedImage(6000,6000,BufferedImage.TYPE_INT_RGB); //nicht höher als 5000 setzen sonst OutOfMemoryError!
     
     /**
      * Creates new form window
@@ -345,17 +345,42 @@ public class window extends javax.swing.JFrame {
         int[] Bildnummern=Regression(durchschnittsfarbeP,durchschnittsfarbeB);
         
         
-        
-        System.out.println("Bildabfolgenfarbe");
-        for(int i=0;i<Bildabfolge.length;i++){
-            System.out.println( (i+1)+" : Farbe:"+durchschnittsfarbeB[Bildnummern[i]]+"  von Bild mit Nr "+(Bildnummern[i]+1)+" passt am besten zu "+durchschnittsfarbeP[i]);
+        String[] bildInfo=new String[anzahlbilder];
+        for(int i=0;i<anzahlbilder;i++){
+            bildInfo[i]=i+"#"+durchschnittsfarbeB[i];
+            
         }
         
+        int[] xKoordinate=new int[Bildnummern.length];
+        int[] yKoordinate=new int[Bildnummern.length];        
+        Color[] usedDurchschnittsfarbe=new Color[Bildnummern.length];
+        String[] rasterInfo=new String[Bildnummern.length];
+        
+        System.out.println("Bildabfolgenfarbe");
+        for(int i=0;i<Bildnummern.length;i++){
+            yKoordinate[i]=i%rasterY-1;
+            xKoordinate[i]=(i-yKoordinate[i])/rasterY;
+           // System.out.println( i+" : Farbe:"+durchschnittsfarbeB[Bildnummern[i]]+"  von Bild mit Nr "+(Bildnummern[i]+1)+" passt am besten zum Raster "+i+" mit Farbe: "+durchschnittsfarbeP[i]);
+           // System.out.println(xKoordinate[i]+","+yKoordinate[i]);
+            usedDurchschnittsfarbe[i]=durchschnittsfarbeB[Bildnummern[i]]; //speichert die zu benutzenden Durchschnittsfarben in einem Array
+            rasterInfo[i]=usedDurchschnittsfarbe[i]+"#"+xKoordinate[i]+"#"+yKoordinate[i]+"+";
+            
+        }
+        
+        for(int i=0;i<Bildnummern.length;i++){
+            for(int p=0;p<Bildnummern.length;p++){
+                if(usedDurchschnittsfarbe[i]==usedDurchschnittsfarbe[p]){
+                    rasterInfo[i]+=p+"#";
+                }
+            }
+        }
+        System.out.println("         "+rasterInfo);
         //Ab hier wird gezeichnet------------------------------
         
         jLabel4.setText("Zeichnen...");
         
-        Graphics2D g_bi=bi.createGraphics();
+        
+        /*Graphics2D g_bi=bi.createGraphics();
        // BufferedImage biDoppelt=null;
        // biDoppelt=bi;
         
@@ -383,7 +408,7 @@ public class window extends javax.swing.JFrame {
               
             }
         }
-       
+       */
         
         System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");       
        
@@ -443,7 +468,7 @@ public class window extends javax.swing.JFrame {
     /**Ordnet Farbvektoren zueinander
      * @param P Durchschnittsfarben aller Posterrasterkästchen
      * @param B Durchschnittsfarben aller Bilder aus der Bildbibliothek
-     * @return B-Array in der passenden Reihenfolge
+     * @return B-Array in der passenden Reihenfolge, das so lang ist, wie die Anzahl der Rasterkästchen
      */
     private int[] Regression(Color[] P, Color[] B){                                   //Finde zu jedem Rasterkästchen des Poster das passendste Bild
         
