@@ -10,9 +10,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import static java.lang.Integer.parseInt;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -30,7 +35,7 @@ import javax.swing.JFileChooser;
 public class window extends javax.swing.JFrame {
     BufferedImage bi=null;
     BufferedImage biDoppelt=new BufferedImage(6000,6000,BufferedImage.TYPE_INT_RGB); //nicht höher als 5000 setzen sonst OutOfMemoryError!
-    
+    String library="";  
     /**
      * Creates new form window
      */
@@ -54,18 +59,21 @@ public class window extends javax.swing.JFrame {
             }
 
         };
-        jToggleButton1 = new javax.swing.JToggleButton();
         jTextField1 = new javax.swing.JTextField();
-        jToggleButton2 = new javax.swing.JToggleButton();
         jTextField2 = new javax.swing.JTextField();
-        jToggleButton3 = new javax.swing.JToggleButton();
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jToggleButton4 = new javax.swing.JToggleButton();
         jLabel4 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,37 +81,22 @@ public class window extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 517, Short.MAX_VALUE)
+            .addGap(0, 858, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 285, Short.MAX_VALUE)
+            .addGap(0, 284, Short.MAX_VALUE)
         );
 
-        jToggleButton1.setText("Bild wählen");
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
-            }
-        });
-
+        jTextField1.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund\\abstract_bunt.jpg");
         jTextField1.setToolTipText("");
 
-        jToggleButton2.setText("Bildbibliothek wählen");
-        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton2ActionPerformed(evt);
-            }
-        });
-
+        jTextField2.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund");
         jTextField2.setToolTipText("");
 
-        jToggleButton3.setText("Poster erstellen");
-        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton3ActionPerformed(evt);
-            }
-        });
+        jTextField3.setText("10");
+
+        jTextField4.setText("10");
 
         jLabel1.setText("Raster wählen:");
 
@@ -111,14 +104,56 @@ public class window extends javax.swing.JFrame {
 
         jLabel3.setText("Y");
 
-        jToggleButton4.setText("Bild speichern unter...");
-        jToggleButton4.addActionListener(new java.awt.event.ActionListener() {
+        jLabel4.setText("jLabel4");
+
+        jButton2.setText("Bild wählen");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton4ActionPerformed(evt);
+                jButton2ActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("jLabel4");
+        jButton3.setText("Bildbibliothek wählen");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Bild speichern unter...");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Poster erstellen");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Bildbibliothek speichern");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Bildbibliothek lesen");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton7.setText("Bildbibliothek laden");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -128,52 +163,68 @@ public class window extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                            .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jToggleButton3))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(32, 32, 32)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jToggleButton4))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jButton1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton7)
+                                        .addGap(0, 0, Short.MAX_VALUE)))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButton1)
-                    .addComponent(jToggleButton2)
-                    .addComponent(jToggleButton3))
+                    .addComponent(jButton2)
+                    .addComponent(jButton3)
+                    .addComponent(jButton5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(13, 13, 13)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton6)
+                    .addComponent(jButton1)
+                    .addComponent(jButton7))
+                .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
-                    .addComponent(jToggleButton4))
+                    .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -183,72 +234,126 @@ public class window extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        //Bild wählen
-        final JFileChooser fc = new JFileChooser();//In response to a button click:        
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        final JFileChooser fc = new JFileChooser();
         fc.setCurrentDirectory(new File("/"));
         int zahl = fc.showOpenDialog(this);
-        File p=fc.getSelectedFile();     //p=poster
-        jTextField1.setText(p.getAbsolutePath());
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
+        File f=fc.getSelectedFile();        
+        jTextField1.setText(f.getAbsolutePath());
+    }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        //Bildbibliothek wählen
-        final JFileChooser fc = new JFileChooser();//In response to a button click:        
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        final JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY );
         fc.setCurrentDirectory(new File("/"));
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int zahl = fc.showOpenDialog(this);
-        File b=fc.getSelectedFile();       // b=bilder        
-        jTextField2.setText(b.getAbsolutePath());
-    }//GEN-LAST:event_jToggleButton2ActionPerformed
+        int zahl = fc.showOpenDialog(this);        
+        File f=fc.getSelectedFile();        
+        jTextField2.setText(f.getAbsolutePath());
+    }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
-       //Poster erstellen
-       Render();                   
-       jPanel1.repaint();
-       
-       /*
-       Geschwnidigkeit: 10000 Bilder pro Stunde
-       Test:
-       1.: 200x100; 612 Bilder; Zeit 2h      
-       */
-      
-    }//GEN-LAST:event_jToggleButton3ActionPerformed
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        Render();
+        jPanel1.repaint();
+    }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
-        //Bild speichern unter...
-        JFileChooser fc=new JFileChooser();
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        final JFileChooser fc = new JFileChooser();
         fc.setCurrentDirectory(new File("/"));
-        int zahl = fc.showSaveDialog(this);
+        int zahl = fc.showOpenDialog(this);  
         File f=fc.getSelectedFile();
         System.out.println("Speichern als "+f.getAbsolutePath());
         try {
-            //anstatt ImageIO.write wird folgendes verwendet, um die Qualität der Bilder beizubehalten
-            //Quelle: http://stackoverflow.com/questions/17015197/quality-loss-using-imageio-write
-           /* ImageWriter writer = ImageIO.getImageWritersByFormatName("jpeg").next();  //Iterator mit allen jpg-Bildern
-            ImageWriteParam param = writer.getDefaultWriteParam();  
-            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT); 
-            param.setCompressionQuality(1.0F); //Qualität wird auf Maximum (1.0) gesetzt            
-            FileImageOutputStream output = new FileImageOutputStream(f);
-            writer.setOutput(output);
-            IIOImage image = new IIOImage(biDoppelt, null, null);
-            writer.write(null, image, param);
-            writer.dispose();*/
-           // writer.write(bi);
-            
-            ImageIO.write(biDoppelt,"png",f);
+            ImageIO.write(bi, "jpg", f);
         } catch (IOException ex) {
             System.out.println("Problem beim Speichern aufgetreten!");
         }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        final JFileChooser fc = new JFileChooser();
+        fc.setCurrentDirectory(new File("/"));
+        int zahl = fc.showOpenDialog(this);   
+        File f=fc.getSelectedFile();    
+            
+        try{         
+            PrintWriter pWriter=new PrintWriter(new BufferedWriter(new FileWriter(f.getAbsolutePath()+".txt"))); 
+            pWriter.println(library); 
+            if (pWriter != null){ 
+                pWriter.flush(); 
+                pWriter.close(); 
+            }
+        } catch (IOException e) {
+            System.out.println("Problem beim Speichern aufgetreten!");            
+        } 
+           
+         
+        System.out.println("Bildbibliothek gespeichert als "+f.getAbsolutePath());
+           
+        jLabel4.setText("Erfolgreich gespeichert!");
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        String pfadB=jTextField2.getText();  
+        File bilder=new File(pfadB);   // Lesen der Bildbibiliothek      
+        File[] Bild=bilder.listFiles();
+        if(bilder!=null){
+            Bild=bilder.listFiles();  
+        }else{
+            System.out.println("                    FEHLER !!!");;
+        }
+            System.out.println("Bildordner gelesen");
+            System.out.println("Dateien: "+Bild);        
         
-    }//GEN-LAST:event_jToggleButton4ActionPerformed
+        int anzahlbilder=Bild.length;
+        int[][] dB=new int[anzahlbilder][3]; 
+        library=pfadB;
+             System.out.println("Durchschnittsfarbe der Bilder berechnen");
+             System.out.println("Anzahl Bilder: "+anzahlbilder);
+        for(anzahlbilder=0; anzahlbilder<Bild.length;anzahlbilder++){
+            if (Bild[anzahlbilder]!=null){
+                try {
+                    BufferedImage biB=ImageIO.read(Bild[anzahlbilder]);  
+                    dB[anzahlbilder]=AverageColor(biB,0,0,biB.getWidth(),biB.getHeight());  //Durchschnittsfarbe Bildbibliothekbilder         
+                    biB=null;   
+                    library+="#"+dB[anzahlbilder][0]+","+dB[anzahlbilder][1]+","+dB[anzahlbilder][2];
+                    System.out.println("Bild gelesen : "+(anzahlbilder+1)+" von "+Bild.length);
+                } catch (IOException ex) {
+                    System.out.println("Fehler aufgetreten beim Lesen der Datei: "+(anzahlbilder+1));
+                }
+            }                     
+            
+        }   
+        jLabel4.setText("Erfolgreich gelesen!");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+        final JFileChooser fc = new JFileChooser();
+        fc.setCurrentDirectory(new File("/"));
+        int zahl = fc.showOpenDialog(this);
+        File f=fc.getSelectedFile();
+       
+        try{
+            BufferedReader br=new BufferedReader(new FileReader(f.getAbsolutePath()));
+            library=br.readLine();            
+            System.out.println("Datei "+f.getAbsolutePath()+" wurde erfolgreich eingelesen!");
+        } catch(Exception e){
+            System.out.println("Datei nicht gefunden!");
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * Hauptprozess
      */
     private void Render(){ 
        
-        String pfadB=jTextField2.getText();                          //Einlesen der Eingaben und Deklarierungen
+                                //Einlesen der Eingaben und Deklarierungen
         String pfadP=jTextField1.getText();
         
     
@@ -276,7 +381,7 @@ public class window extends javax.swing.JFrame {
              System.out.println("Fehler in Textfeld 4 (keine Zahl)");
          }
        
-        Color[] durchschnittsfarbeP=new Color[rasterX*rasterY];        
+        int[][] durchschnittsfarbeP=new int[rasterX*rasterY][3];        
         
             System.out.println("Deklarierung");
         //  Hier beginnt das Lesen der Dateien
@@ -302,63 +407,35 @@ public class window extends javax.swing.JFrame {
              System.out.println("Lesen von Reihe "+x+" erfolgreich");
         }
         
-        
-        jLabel4.setText("Lesen...");
-        
-        File bilder=new File(pfadB);   // Lesen der Bildbibiliothek
-        File[] Bild=bilder.listFiles();
-        if(bilder!=null){
-            Bild=bilder.listFiles();  
-        }else{
-            System.out.println("                    FEHLER !!!");;
+       
+        String[] zeile=library.split("#");
+        int[][] durchschnittsfarbeB=new int[zeile.length-1][3];
+        for(int i=1;i<zeile.length;i++){                
+            String[] a=zeile[i].split(",");
+            durchschnittsfarbeB[i-1][0]=Integer.parseInt(a[0]);
+            durchschnittsfarbeB[i-1][1]=Integer.parseInt(a[1]);
+            durchschnittsfarbeB[i-1][2]=Integer.parseInt(a[2]);
+                
         }
-            System.out.println("Bildordner gelesen");
-            System.out.println("Dateien: "+Bild);        
-        
-        int anzahlbilder=Bild.length;
-        Color[] durchschnittsfarbeB=new Color[anzahlbilder]; 
-        
-             System.out.println("Durchschnittsfarbe der Bilder berechnen");
-             System.out.println("Anzahl Bilder: "+anzahlbilder);
-        for(anzahlbilder=0; anzahlbilder<Bild.length;anzahlbilder++){
-            if (Bild[anzahlbilder]!=null){
-                try {
-                    BufferedImage biB=ImageIO.read(Bild[anzahlbilder]);  
-                    durchschnittsfarbeB[anzahlbilder]=AverageColor(biB,0,0,biB.getWidth(),biB.getHeight());  //Durchschnittsfarbe Bildbibliothekbilder         
-                    biB=null;   
-                    System.out.println("Bild gelesen : "+(anzahlbilder+1)+" von "+Bild.length);
-                } catch (IOException ex) {
-                    System.out.println("Fehler aufgetreten beim Lesen der Datei: "+(anzahlbilder+1));
-                }
-            }                     
-            
-        }   
-        System.out.println("Farbe Posterraster");
-        for(int a=0;a<durchschnittsfarbeP.length;a++){
-           System.out.println(a+" : "+durchschnittsfarbeP[a]);
-        }
-        System.out.println("Farbe Bilder       ");
-        for(int b=0;b<durchschnittsfarbeB.length;b++){
-           System.out.println(b+" : "+durchschnittsfarbeB[b]);
-        }
+           
         String[] Bildabfolge=new String[durchschnittsfarbeP.length];
         int[] Bildnummern=Regression(durchschnittsfarbeP,durchschnittsfarbeB);
         
         
-        String[] bildInfo=new String[anzahlbilder];
-        for(int i=0;i<anzahlbilder;i++){
+        String[] bildInfo=new String[durchschnittsfarbeB.length];
+        for(int i=0;i<durchschnittsfarbeB.length;i++){
             bildInfo[i]=i+"#"+durchschnittsfarbeB[i];
             
         }
         
         int[] xKoordinate=new int[Bildnummern.length];
         int[] yKoordinate=new int[Bildnummern.length];        
-        Color[] usedDurchschnittsfarbe=new Color[Bildnummern.length];
+        int[][] usedDurchschnittsfarbe=new int[Bildnummern.length][3];
         String[] rasterInfo=new String[Bildnummern.length];
         
         System.out.println("Bildabfolgenfarbe");
         for(int i=0;i<Bildnummern.length;i++){
-            yKoordinate[i]=i%rasterY-1;
+            yKoordinate[i]=i%rasterY;
             xKoordinate[i]=(i-yKoordinate[i])/rasterY;
            // System.out.println( i+" : Farbe:"+durchschnittsfarbeB[Bildnummern[i]]+"  von Bild mit Nr "+(Bildnummern[i]+1)+" passt am besten zum Raster "+i+" mit Farbe: "+durchschnittsfarbeP[i]);
            // System.out.println(xKoordinate[i]+","+yKoordinate[i]);
@@ -369,46 +446,57 @@ public class window extends javax.swing.JFrame {
         
         for(int i=0;i<Bildnummern.length;i++){
             for(int p=0;p<Bildnummern.length;p++){
-                if(usedDurchschnittsfarbe[i]==usedDurchschnittsfarbe[p]){
-                    rasterInfo[i]+=p+"#";
+                if(usedDurchschnittsfarbe[i]==usedDurchschnittsfarbe[p] && p!=i && usedDurchschnittsfarbe[i][0]!=1000){
+                    rasterInfo[i]+=p+"#";                    
+                    usedDurchschnittsfarbe[p][0]=1000;
+                    usedDurchschnittsfarbe[p][1]=1000;
+                    usedDurchschnittsfarbe[p][2]=1000;
+                    
                 }
             }
+            System.out.println(i+"         "+rasterInfo[i]);
         }
-        System.out.println("         "+rasterInfo);
+        for(int i=0;i<usedDurchschnittsfarbe.length;i++){        
+            System.out.println(usedDurchschnittsfarbe[i][0]+","+usedDurchschnittsfarbe[i][1]+","+usedDurchschnittsfarbe[i][0]);
+            
+        }
         //Ab hier wird gezeichnet------------------------------
         
         jLabel4.setText("Zeichnen...");
         
         
-        /*Graphics2D g_bi=bi.createGraphics();
-       // BufferedImage biDoppelt=null;
-       // biDoppelt=bi;
-        
+        Graphics2D g_bi=bi.createGraphics();       
         Graphics2D g_biDoppelt=biDoppelt.createGraphics();     
         g_bi.setColor(new Color(255,255,255));
         g_bi.fillRect(0,0,bi.getWidth(),bi.getHeight());
         g_biDoppelt.setColor(new Color(255,255,255));
         g_biDoppelt.fillRect(0,0,bi.getWidth(),bi.getHeight());
-        for(int x=0;x<rasterX;x++){
-            for(int y=0;y<rasterY;y++){
-                try{
-                    BufferedImage bildPoster=ImageIO.read(Bild[Bildnummern[x*rasterY+y]]);
-                    int breiteR=bi.getWidth()/rasterX;
-                    int hoeheR=bi.getHeight()/rasterY;
-                    int hoeheD=biDoppelt.getHeight()/rasterY;
-                    int breiteD=biDoppelt.getWidth()/rasterX;
-                    g_biDoppelt.drawImage(bildPoster, x*breiteD,y*breiteD,breiteD,hoeheD,this);
-                    g_bi.drawImage(bildPoster, x*breiteR,y*hoeheR,breiteR,hoeheR,this);
+        
+        String[] pfad=library.split("#");
+        File bilder=new File(pfad[0]);   // Lesen der geladenen Bildbibiliothek      
+        File[] Bild=bilder.listFiles(); 
+             System.out.println("Anzahl Bilder geladen: "+Bild.length);        
+        if(Bild!=null){
+            for(int x=0;x<rasterX;x++){
+                for(int y=0;y<rasterY;y++){
+                    try{
+                        BufferedImage bildPoster=ImageIO.read(Bild[Bildnummern[x*rasterY+y]]);
+                        int breiteR=bi.getWidth()/rasterX;
+                        int hoeheR=bi.getHeight()/rasterY;
+                        int hoeheD=biDoppelt.getHeight()/rasterY;
+                        int breiteD=biDoppelt.getWidth()/rasterX;
+                        g_biDoppelt.drawImage(bildPoster, x*breiteD,y*breiteD,breiteD,hoeheD,this);
+                        g_bi.drawImage(bildPoster, x*breiteR,y*hoeheR,breiteR,hoeheR,this);
                
-                }catch(IOException ex){
-                    System.out.println("Fehler aufgetreten beim Lesen der Datei: "+(x*rasterY+y+1));
-                }             
+                    }catch(IOException ex){
+                        System.out.println("Fehler aufgetreten beim Lesen der Datei: "+(x*rasterY+y+1));
+                    }             
                 
-                System.out.println((x*rasterY+y+1)+" /"+(rasterX*rasterY)+"  ("+((x*rasterY+y+1)/(rasterX*rasterY)*100)+"%)");
+                    System.out.println((x*rasterY+y+1)+" /"+(rasterX*rasterY)+"  ("+(int)((x*rasterY+y+1)*1.0/((rasterX*rasterY)*1.0)*100)+"%)");
               
+                }
             }
         }
-       */
         
         System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");       
        
@@ -442,26 +530,28 @@ public class window extends javax.swing.JFrame {
      * @param Y links oben y-Koordinate des Ausschnitts
      * @param breite Breite des Ausschnitts
      * @param hoehe Höhe des Ausschnitts
-     * @return die Durchschnittsfarbe
+     * @return die Durchschnittsfarbe als int array
      */    
-    private Color AverageColor(BufferedImage bi,int X,int Y,int breite, int hoehe){   
-        int r=0,g=0,b=0,pixelanzahl=0;     
+    private int[] AverageColor(BufferedImage bi,int X,int Y,int breite, int hoehe){   
+        int pixelanzahl=0;  
+        int[] C=new int[3];
         System.out.println("    Deklarierung");
         System.out.println("    Berechne...");
             for(pixelanzahl=0;pixelanzahl<Math.sqrt(breite*hoehe);pixelanzahl++){
                 int co=bi.getRGB((int)((Math.random()*breite+X)),(int)((Math.random()*hoehe+Y)));
                 Color c=new Color(co);
-                r+=c.getRed();                                   // Farbwerte werden alle  addiert und ...
-                g+=c.getGreen();
-                b+=c.getBlue();         
+                C[0]+=c.getRed();                                   // Farbwerte werden alle  addiert und ...
+                C[1]+=c.getGreen();
+                C[2]+=c.getBlue();         
             }
        
-        r/=pixelanzahl;                                           // ... durch die Anzahl der ausgwewählten Pixel dividiert
-        g/=pixelanzahl;
-        b/=pixelanzahl;
-        Color C=new Color(r,g,b);  
+        C[0]/=pixelanzahl;                                           // ... durch die Anzahl der ausgwewählten Pixel dividiert
+        C[1]/=pixelanzahl;
+        C[2]/=pixelanzahl;
+       
         
-        System.out.println("    Erfolgreich! Farbe: "+C);
+        
+        System.out.println("    Erfolgreich! Farbe: "+C[0]+","+C[1]+","+C[2]);
         return C;       
     }
     
@@ -470,27 +560,12 @@ public class window extends javax.swing.JFrame {
      * @param B Durchschnittsfarben aller Bilder aus der Bildbibliothek
      * @return B-Array in der passenden Reihenfolge, das so lang ist, wie die Anzahl der Rasterkästchen
      */
-    private int[] Regression(Color[] P, Color[] B){                                   //Finde zu jedem Rasterkästchen des Poster das passendste Bild
+    private int[] Regression(int[][] P, int[][] B){                                //Finde zu jedem Rasterkästchen des Poster das passendste Bild        
         
-        int[][] poster=new int[P.length][3];
-        int[][] bilder=new int[B.length][3]; 
-        int[] bildNr=new int[P.length];
-        String[] bild=new String[bilder.length];
-         //Farbwerte werden in ganzen Zahlen umgewandelt
-        for(int i=0;i<P.length;i++){                  //poster array array werden die entsprechenden Farben zugewiesen
-            poster[i][0]=P[i].getRed();
-            poster[i][1]=P[i].getGreen();
-            poster[i][2]=P[i].getBlue();            
-        }
-        for(int i=0;i<B.length;i++){                  //bilder raster " "   "     "    "                "       "
-            bilder[i][0]=B[i].getRed();
-            bilder[i][1]=B[i].getGreen();
-            bilder[i][2]=B[i].getBlue();            
-        }
-        
+        int[] bildNr=new int[P.length];              
         int[][] Xbilder=new int[P.length][3];
         for(int j=0;j<P.length;j++){          
-            bildNr[j]=kleinsterAbstand(poster[j],bilder);
+            bildNr[j]=kleinsterAbstand(P[j],B);
             System.out.println("        bildNr["+j+"]: "+bildNr[j]);
         }
         
@@ -565,6 +640,13 @@ public class window extends javax.swing.JFrame {
     }    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -574,9 +656,5 @@ public class window extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
-    private javax.swing.JToggleButton jToggleButton3;
-    private javax.swing.JToggleButton jToggleButton4;
     // End of variables declaration//GEN-END:variables
 }
