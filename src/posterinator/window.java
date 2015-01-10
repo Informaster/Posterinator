@@ -346,6 +346,7 @@ public class window extends javax.swing.JFrame {
         } catch(Exception e){
             System.out.println("Datei nicht gefunden!");
         }
+        jLabel4.setText("Erfolgreich "+f.getAbsolutePath()+" geladen!");
     }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
@@ -428,39 +429,50 @@ public class window extends javax.swing.JFrame {
             
         }
         
-        int[] xKoordinate=new int[Bildnummern.length];
-        int[] yKoordinate=new int[Bildnummern.length];        
-        int[][] usedDurchschnittsfarbe=new int[Bildnummern.length][3];
-        String[] rasterInfo=new String[Bildnummern.length];
-        
-        System.out.println("Bildabfolgenfarbe");
+      
+        String bildDaten="";
+        String[] position=new String[Bildnummern.length];
         for(int i=0;i<Bildnummern.length;i++){
-            yKoordinate[i]=i%rasterY;
-            xKoordinate[i]=(i-yKoordinate[i])/rasterY;
-           // System.out.println( i+" : Farbe:"+durchschnittsfarbeB[Bildnummern[i]]+"  von Bild mit Nr "+(Bildnummern[i]+1)+" passt am besten zum Raster "+i+" mit Farbe: "+durchschnittsfarbeP[i]);
-           // System.out.println(xKoordinate[i]+","+yKoordinate[i]);
-            usedDurchschnittsfarbe[i]=durchschnittsfarbeB[Bildnummern[i]]; //speichert die zu benutzenden Durchschnittsfarben in einem Array
-            rasterInfo[i]=usedDurchschnittsfarbe[i]+"#"+xKoordinate[i]+"#"+yKoordinate[i]+"+";
-            
-        }
-        
-        for(int i=0;i<Bildnummern.length;i++){
+            position[i]=""+(i%rasterY)+"-"+((i-(i%rasterY))/rasterY);
             for(int p=0;p<Bildnummern.length;p++){
-                if(usedDurchschnittsfarbe[i]==usedDurchschnittsfarbe[p] && p!=i && usedDurchschnittsfarbe[i][0]!=1000){
-                    rasterInfo[i]+=p+"#";                    
-                    usedDurchschnittsfarbe[p][0]=1000;
-                    usedDurchschnittsfarbe[p][1]=1000;
-                    usedDurchschnittsfarbe[p][2]=1000;
-                    
-                }
+                if(Bildnummern[i]==Bildnummern[p]&&p!=i){
+                    Bildnummern[p]=12345;
+                        
+                    position[i]+=","+((p-(p%rasterY))/rasterY)+"-"+(p%rasterY);
+                }           
             }
-            System.out.println(i+"         "+rasterInfo[i]);
+            if(Bildnummern[i]!=12345){
+                bildDaten+="#"+Bildnummern[i]+":"+position[i];
+            }            
         }
-        for(int i=0;i<usedDurchschnittsfarbe.length;i++){        
-            System.out.println(usedDurchschnittsfarbe[i][0]+","+usedDurchschnittsfarbe[i][1]+","+usedDurchschnittsfarbe[i][0]);
+        String[] daten=bildDaten.split("#");
+        System.out.println("Verwendete Bilder :");
+        for(int i=0;i<daten.length;i++){
+            System.out.println(i+": "+daten[i]);
+        }
+        
+        
+     
+        //Ab hier wird gezeichnet------------------------------
+        
+        String[] puffer=bildDaten.split("#");                            // Hier wird der gesamte Bilddatenstrang in die einzelnen Bilder unterteilt
+        int[] usedPictures=new int[puffer.length];
+        int[][][]   koordinaten=new int[Bildnummern.length][Bildnummern.length][2];       // Um Koordinaten aufzurufen braucht man die Stelle des Bildes im usedPictures-array, die Stelle der zu verwendeten Koordinate und 0 oder 1 für die x- oder y-Koordinate
+        for(int i=1;i<puffer.length;i++){
+            String[] puffer2=puffer[i].split(":");                       // Hier werden die Daten der einzelnen Bilder in Bildnummer und verwendeter Koordinaten unterteilt
+            usedPictures[i-1]=Integer.parseInt(puffer2[0]); 
+            
+            String[] puffer3=puffer2[1].split(",");                      // Hier werden die Koordinaten einzeln unterteilt
+            for(int j=0;j<puffer3.length;j++){
+                String[] puffer4=puffer3[j].split("-");                  // Hier werden einzelne Koordinaten-Tupel in x- und y- Koordinate unterteilt
+                koordinaten[i-1][j][1]=Integer.parseInt(puffer4[0]);
+                koordinaten[i-1][j][0]=Integer.parseInt(puffer4[1]);
+            }
             
         }
-        //Ab hier wird gezeichnet------------------------------
+       
+        
+        
         
         jLabel4.setText("Zeichnen...");
         
@@ -477,26 +489,28 @@ public class window extends javax.swing.JFrame {
         File[] Bild=bilder.listFiles(); 
              System.out.println("Anzahl Bilder geladen: "+Bild.length);        
         if(Bild!=null){
-            for(int x=0;x<rasterX;x++){
-                for(int y=0;y<rasterY;y++){
-                    try{
-                        BufferedImage bildPoster=ImageIO.read(Bild[Bildnummern[x*rasterY+y]]);
-                        int breiteR=bi.getWidth()/rasterX;
-                        int hoeheR=bi.getHeight()/rasterY;
-                        int hoeheD=biDoppelt.getHeight()/rasterY;
-                        int breiteD=biDoppelt.getWidth()/rasterX;
-                        g_biDoppelt.drawImage(bildPoster, x*breiteD,y*breiteD,breiteD,hoeheD,this);
-                        g_bi.drawImage(bildPoster, x*breiteR,y*hoeheR,breiteR,hoeheR,this);
-               
-                    }catch(IOException ex){
-                        System.out.println("Fehler aufgetreten beim Lesen der Datei: "+(x*rasterY+y+1));
-                    }             
+            for(int i=0;i<usedPictures.length;i++){                
+                try{
+                    BufferedImage bildPoster=ImageIO.read(Bild[usedPictures[i]]);
+                    int breiteR=bi.getWidth()/rasterX;
+                    int hoeheR=bi.getHeight()/rasterY;
+                    int hoeheD=biDoppelt.getHeight()/rasterY;
+                    int breiteD=biDoppelt.getWidth()/rasterX;
+                    for(int j=0;j<koordinaten[i].length;j++){
+                        g_biDoppelt.drawImage(bildPoster, koordinaten[i][j][0]*breiteD,koordinaten[i][j][1]*breiteD,breiteD,hoeheD,this);
+                        g_bi.drawImage(bildPoster, koordinaten[i][j][0]*breiteR,koordinaten[i][j][1]*hoeheR,breiteR,hoeheR,this);
+                    //    System.out.println((int)((koordinaten[i][j][0]*rasterY+koordinaten[i][j][1]+1)*1.0/((rasterX*rasterY)*1.0)*100)+"%)");
+                        
+                    }System.out.println(i);
+                }catch(IOException ex){
+                    System.out.println("Fehler aufgetreten beim Lesen der Datei");
+                }             
                 
-                    System.out.println((x*rasterY+y+1)+" /"+(rasterX*rasterY)+"  ("+(int)((x*rasterY+y+1)*1.0/((rasterX*rasterY)*1.0)*100)+"%)");
+                
               
-                }
             }
         }
+        
         
         System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");       
        
@@ -587,7 +601,6 @@ public class window extends javax.swing.JFrame {
                 nr=i+1;               
             }
         }
-        System.out.println("                Abstand "+Abstand(a,b[nr]));
         return nr;                                  //gibt die Nummer des Vektors,der am nächsten zum Bezugsvektor a liegt, an
         
     }
