@@ -8,24 +8,15 @@ package posterinator;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.Integer.parseInt;
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.plugins.jpeg.JPEGImageReadParam;
-import javax.imageio.stream.FileImageOutputStream;
-import javax.imageio.stream.ImageInputStream;
 import javax.swing.JFileChooser;
 
 /**
@@ -33,8 +24,7 @@ import javax.swing.JFileChooser;
  * @author Arthur
  */
 public class window extends javax.swing.JFrame {
-    BufferedImage bi=null;
-    BufferedImage biDoppelt=new BufferedImage(6000,6000,BufferedImage.TYPE_INT_RGB); //nicht höher als 5000 setzen sonst OutOfMemoryError!
+    BufferedImage bi=new BufferedImage(6000,6000,BufferedImage.TYPE_INT_RGB);
     String library="";  
     /**
      * Creates new form window
@@ -88,7 +78,7 @@ public class window extends javax.swing.JFrame {
             .addGap(0, 284, Short.MAX_VALUE)
         );
 
-        jTextField1.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund\\abstract_bunt.jpg");
+        jTextField1.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund\\SAM_3488.jpg");
         jTextField1.setToolTipText("");
 
         jTextField2.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund");
@@ -357,7 +347,7 @@ public class window extends javax.swing.JFrame {
                                 //Einlesen der Eingaben und Deklarierungen
         String pfadP=jTextField1.getText();
         
-    
+        double time=System.currentTimeMillis();
         
             System.out.println("Bilder werden geladen...");
       
@@ -415,29 +405,26 @@ public class window extends javax.swing.JFrame {
             String[] a=zeile[i].split(",");
             durchschnittsfarbeB[i-1][0]=Integer.parseInt(a[0]);
             durchschnittsfarbeB[i-1][1]=Integer.parseInt(a[1]);
-            durchschnittsfarbeB[i-1][2]=Integer.parseInt(a[2]);
-                
-        }
-           
-        String[] Bildabfolge=new String[durchschnittsfarbeP.length];
-        int[] Bildnummern=Regression(durchschnittsfarbeP,durchschnittsfarbeB);
-        
+            durchschnittsfarbeB[i-1][2]=Integer.parseInt(a[2]);                
+        }                 
         
         String[] bildInfo=new String[durchschnittsfarbeB.length];
         for(int i=0;i<durchschnittsfarbeB.length;i++){
-            bildInfo[i]=i+"#"+durchschnittsfarbeB[i];
-            
+            bildInfo[i]=i+"#"+durchschnittsfarbeB[i];            
         }
         
-      
+        int[] Bildnummern=Regression(durchschnittsfarbeP,durchschnittsfarbeB); 
+       // int[] originalBildnummern=Regression(durchschnittsfarbeP,durchschnittsfarbeB);
         String bildDaten="";
         String[] position=new String[Bildnummern.length];
+        System.out.println("Positionszuordnung");
         for(int i=0;i<Bildnummern.length;i++){
-            position[i]=""+(i%rasterY)+"-"+((i-(i%rasterY))/rasterY);
-            for(int p=0;p<Bildnummern.length;p++){
-                if(Bildnummern[i]==Bildnummern[p]&&p!=i){
+            position[i]=""+((i-(i%rasterY))/rasterY)+"-"+(i%rasterY);
+            System.out.println("    "+i);
+            for(int p=i+1;p<Bildnummern.length;p++){
+                if(Bildnummern[i]==Bildnummern[p]){
                     Bildnummern[p]=12345;
-                        
+                       // System.out.println("        "+p);
                     position[i]+=","+((p-(p%rasterY))/rasterY)+"-"+(p%rasterY);
                 }           
             }
@@ -457,7 +444,7 @@ public class window extends javax.swing.JFrame {
         
         String[] puffer=bildDaten.split("#");                            // Hier wird der gesamte Bilddatenstrang in die einzelnen Bilder unterteilt
         int[] usedPictures=new int[puffer.length];
-        int[][][]   koordinaten=new int[Bildnummern.length][Bildnummern.length][2];       // Um Koordinaten aufzurufen braucht man die Stelle des Bildes im usedPictures-array, die Stelle der zu verwendeten Koordinate und 0 oder 1 für die x- oder y-Koordinate
+        int[][][]   koordinaten=new int[usedPictures.length][Bildnummern.length][2];       // Um Koordinaten aufzurufen braucht man die Stelle des Bildes im usedPictures-array, die Stelle der zu verwendeten Koordinate und 0 oder 1 für die x- oder y-Koordinate
         for(int i=1;i<puffer.length;i++){
             String[] puffer2=puffer[i].split(":");                       // Hier werden die Daten der einzelnen Bilder in Bildnummer und verwendeter Koordinaten unterteilt
             usedPictures[i-1]=Integer.parseInt(puffer2[0]); 
@@ -465,8 +452,8 @@ public class window extends javax.swing.JFrame {
             String[] puffer3=puffer2[1].split(",");                      // Hier werden die Koordinaten einzeln unterteilt
             for(int j=0;j<puffer3.length;j++){
                 String[] puffer4=puffer3[j].split("-");                  // Hier werden einzelne Koordinaten-Tupel in x- und y- Koordinate unterteilt
-                koordinaten[i-1][j][1]=Integer.parseInt(puffer4[0]);
-                koordinaten[i-1][j][0]=Integer.parseInt(puffer4[1]);
+                koordinaten[i-1][j][0]=Integer.parseInt(puffer4[0]);
+                koordinaten[i-1][j][1]=Integer.parseInt(puffer4[1]);
             }
             
         }
@@ -477,12 +464,9 @@ public class window extends javax.swing.JFrame {
         jLabel4.setText("Zeichnen...");
         
         
-        Graphics2D g_bi=bi.createGraphics();       
-        Graphics2D g_biDoppelt=biDoppelt.createGraphics();     
+        Graphics2D g_bi=bi.createGraphics();      
         g_bi.setColor(new Color(255,255,255));
         g_bi.fillRect(0,0,bi.getWidth(),bi.getHeight());
-        g_biDoppelt.setColor(new Color(255,255,255));
-        g_biDoppelt.fillRect(0,0,bi.getWidth(),bi.getHeight());
         
         String[] pfad=library.split("#");
         File bilder=new File(pfad[0]);   // Lesen der geladenen Bildbibiliothek      
@@ -491,17 +475,19 @@ public class window extends javax.swing.JFrame {
         if(Bild!=null){
             for(int i=0;i<usedPictures.length;i++){                
                 try{
+                    System.out.println("s");
                     BufferedImage bildPoster=ImageIO.read(Bild[usedPictures[i]]);
+                    System.out.println("asd");
                     int breiteR=bi.getWidth()/rasterX;
                     int hoeheR=bi.getHeight()/rasterY;
-                    int hoeheD=biDoppelt.getHeight()/rasterY;
-                    int breiteD=biDoppelt.getWidth()/rasterX;
+                    int hoeheD=jPanel1.getHeight()/rasterY;
+                    int breiteD=jPanel1.getWidth()/rasterX;
+                    System.out.println("Zeichnen...");
                     for(int j=0;j<koordinaten[i].length;j++){
-                        g_biDoppelt.drawImage(bildPoster, koordinaten[i][j][0]*breiteD,koordinaten[i][j][1]*breiteD,breiteD,hoeheD,this);
                         g_bi.drawImage(bildPoster, koordinaten[i][j][0]*breiteR,koordinaten[i][j][1]*hoeheR,breiteR,hoeheR,this);
-                    //    System.out.println((int)((koordinaten[i][j][0]*rasterY+koordinaten[i][j][1]+1)*1.0/((rasterX*rasterY)*1.0)*100)+"%)");
-                        
-                    }System.out.println(i);
+                    }
+                    bildPoster=null;
+                    System.out.println(i);
                 }catch(IOException ex){
                     System.out.println("Fehler aufgetreten beim Lesen der Datei");
                 }             
@@ -509,10 +495,13 @@ public class window extends javax.swing.JFrame {
                 
               
             }
+        }else{
+            System.out.println("Keine Bilder vorhanden!");
         }
+        time=System.currentTimeMillis()-time;
         
-        
-        System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");       
+        System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");    
+        System.out.println("Dauer: "+time/(1000*60)+" Minuten");
        
         
     }
@@ -524,12 +513,14 @@ public class window extends javax.swing.JFrame {
     private void zeichnen(Graphics g){
         
         if(bi!=null){                              // wenn ein Bild geladen ist
-            int w=jPanel1.getWidth();
+           int w=jPanel1.getWidth();
             int hoeheneu=bi.getHeight()*w/bi.getWidth();
-            if(hoeheneu>jPanel1.getHeight()){
+            if(jPanel1.getHeight()<hoeheneu){
                 hoeheneu=jPanel1.getHeight();
             }
-            g.drawImage(bi,0,0,w,hoeheneu,this);
+            System.out.println("Maße des Bildes original: "+bi.getWidth()+" "+bi.getHeight()+" , nach Anpassung: "+w+" "+hoeheneu);            
+            g.drawImage(bi,0 , 0, w,hoeheneu,this);
+            
         }else{                                     //wenn noch kein Bild geladen ist
             g.setColor(new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
             g.fillRect(0,0,jPanel1.getWidth(),jPanel1.getHeight());
