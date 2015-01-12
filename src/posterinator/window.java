@@ -78,7 +78,7 @@ public class window extends javax.swing.JFrame {
             .addGap(0, 284, Short.MAX_VALUE)
         );
 
-        jTextField1.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund\\SAM_3488.jpg");
+        jTextField1.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund\\abstract_bunt.jpg");
         jTextField1.setToolTipText("");
 
         jTextField2.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund");
@@ -412,27 +412,49 @@ public class window extends javax.swing.JFrame {
         for(int i=0;i<durchschnittsfarbeB.length;i++){
             bildInfo[i]=i+"#"+durchschnittsfarbeB[i];            
         }
+        Graphics2D g_bi=bi.createGraphics();      
+        g_bi.setColor(new Color(255,255,255));
+        g_bi.fillRect(0,0,bi.getWidth(),bi.getHeight());
         
+        String[] pfad=library.split("#");
+        File bilder=new File(pfad[0]);   // Lesen der geladenen Bildbibiliothek      
+        File[] Bild=bilder.listFiles(); 
+             System.out.println("Anzahl Bilder geladen: "+Bild.length);        
         int[] Bildnummern=Regression(durchschnittsfarbeP,durchschnittsfarbeB); 
        // int[] originalBildnummern=Regression(durchschnittsfarbeP,durchschnittsfarbeB);
-        String bildDaten="";
-        String[] position=new String[Bildnummern.length];
+       // String bildDaten="";
+       // String[] position=new String[Bildnummern.length];
         System.out.println("Positionszuordnung");
+        
+        int breiteR=bi.getWidth()/rasterX;
+        int hoeheR=bi.getHeight()/rasterY;
         for(int i=0;i<Bildnummern.length;i++){
-            position[i]=""+((i-(i%rasterY))/rasterY)+"-"+(i%rasterY);
+           // position[i]=""+((i-(i%rasterY))/rasterY)+"-"+(i%rasterY);
             System.out.println("    "+i);
-            for(int p=i+1;p<Bildnummern.length;p++){
-                if(Bildnummern[i]==Bildnummern[p]){
-                    Bildnummern[p]=12345;
-                       // System.out.println("        "+p);
-                    position[i]+=","+((p-(p%rasterY))/rasterY)+"-"+(p%rasterY);
-                }           
+            if(Bildnummern[i]!=-1){ 
+                try{
+                    BufferedImage bildPoster=ImageIO.read(Bild[Bildnummern[i]]);
+                    
+                    for(int p=i;p<Bildnummern.length;p++){
+                        if(Bildnummern[i]==Bildnummern[p] &&Bildnummern[i]!=-1){
+                            System.out.println("        "+p);                        
+                            g_bi.drawImage(bildPoster, ((p-(p%rasterY))/rasterY)*breiteR,(p%rasterY)*hoeheR,breiteR,hoeheR,this);             
+                    
+                            if (p!=i){
+                                Bildnummern[p]=-1;
+                            }
+                        } 
+                    }                         
+                }catch(IOException e){
+                System.out.println("Fehler aufgetreten beim Lesen der Datei");
+                }
             }
-            if(Bildnummern[i]!=12345){
-                bildDaten+="#"+Bildnummern[i]+":"+position[i];
-            }            
+            
+           // if(Bildnummern[i]!=12345){
+           //     bildDaten+="#"+Bildnummern[i]+":"+position[i];
+          //  }            
         }
-        String[] daten=bildDaten.split("#");
+       /* String[] daten=bildDaten.split("#");
         System.out.println("Verwendete Bilder :");
         for(int i=0;i<daten.length;i++){
             System.out.println(i+": "+daten[i]);
@@ -464,7 +486,7 @@ public class window extends javax.swing.JFrame {
         jLabel4.setText("Zeichnen...");
         
         
-        Graphics2D g_bi=bi.createGraphics();      
+        /*Graphics2D g_bi=bi.createGraphics();      
         g_bi.setColor(new Color(255,255,255));
         g_bi.fillRect(0,0,bi.getWidth(),bi.getHeight());
         
@@ -480,8 +502,6 @@ public class window extends javax.swing.JFrame {
                     System.out.println("asd");
                     int breiteR=bi.getWidth()/rasterX;
                     int hoeheR=bi.getHeight()/rasterY;
-                    int hoeheD=jPanel1.getHeight()/rasterY;
-                    int breiteD=jPanel1.getWidth()/rasterX;
                     System.out.println("Zeichnen...");
                     for(int j=0;j<koordinaten[i].length;j++){
                         g_bi.drawImage(bildPoster, koordinaten[i][j][0]*breiteR,koordinaten[i][j][1]*hoeheR,breiteR,hoeheR,this);
@@ -497,7 +517,7 @@ public class window extends javax.swing.JFrame {
             }
         }else{
             System.out.println("Keine Bilder vorhanden!");
-        }
+        }*/
         time=System.currentTimeMillis()-time;
         
         System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");    
