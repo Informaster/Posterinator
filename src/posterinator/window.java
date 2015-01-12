@@ -421,9 +421,6 @@ public class window extends javax.swing.JFrame {
         File[] Bild=bilder.listFiles(); 
              System.out.println("Anzahl Bilder geladen: "+Bild.length);        
         int[] Bildnummern=Regression(durchschnittsfarbeP,durchschnittsfarbeB); 
-       // int[] originalBildnummern=Regression(durchschnittsfarbeP,durchschnittsfarbeB);
-       // String bildDaten="";
-       // String[] position=new String[Bildnummern.length];
         System.out.println("Positionszuordnung");
         
         int breiteR=bi.getWidth()/rasterX;
@@ -450,74 +447,9 @@ public class window extends javax.swing.JFrame {
                 }
             }
             
-           // if(Bildnummern[i]!=12345){
-           //     bildDaten+="#"+Bildnummern[i]+":"+position[i];
-          //  }            
-        }
-       /* String[] daten=bildDaten.split("#");
-        System.out.println("Verwendete Bilder :");
-        for(int i=0;i<daten.length;i++){
-            System.out.println(i+": "+daten[i]);
-        }
-        
-        
-     
-        //Ab hier wird gezeichnet------------------------------
-        
-        String[] puffer=bildDaten.split("#");                            // Hier wird der gesamte Bilddatenstrang in die einzelnen Bilder unterteilt
-        int[] usedPictures=new int[puffer.length];
-        int[][][]   koordinaten=new int[usedPictures.length][Bildnummern.length][2];       // Um Koordinaten aufzurufen braucht man die Stelle des Bildes im usedPictures-array, die Stelle der zu verwendeten Koordinate und 0 oder 1 für die x- oder y-Koordinate
-        for(int i=1;i<puffer.length;i++){
-            String[] puffer2=puffer[i].split(":");                       // Hier werden die Daten der einzelnen Bilder in Bildnummer und verwendeter Koordinaten unterteilt
-            usedPictures[i-1]=Integer.parseInt(puffer2[0]); 
-            
-            String[] puffer3=puffer2[1].split(",");                      // Hier werden die Koordinaten einzeln unterteilt
-            for(int j=0;j<puffer3.length;j++){
-                String[] puffer4=puffer3[j].split("-");                  // Hier werden einzelne Koordinaten-Tupel in x- und y- Koordinate unterteilt
-                koordinaten[i-1][j][0]=Integer.parseInt(puffer4[0]);
-                koordinaten[i-1][j][1]=Integer.parseInt(puffer4[1]);
-            }
-            
-        }
-       
-        
-        
-        
-        jLabel4.setText("Zeichnen...");
-        
-        
-        /*Graphics2D g_bi=bi.createGraphics();      
-        g_bi.setColor(new Color(255,255,255));
-        g_bi.fillRect(0,0,bi.getWidth(),bi.getHeight());
-        
-        String[] pfad=library.split("#");
-        File bilder=new File(pfad[0]);   // Lesen der geladenen Bildbibiliothek      
-        File[] Bild=bilder.listFiles(); 
-             System.out.println("Anzahl Bilder geladen: "+Bild.length);        
-        if(Bild!=null){
-            for(int i=0;i<usedPictures.length;i++){                
-                try{
-                    System.out.println("s");
-                    BufferedImage bildPoster=ImageIO.read(Bild[usedPictures[i]]);
-                    System.out.println("asd");
-                    int breiteR=bi.getWidth()/rasterX;
-                    int hoeheR=bi.getHeight()/rasterY;
-                    System.out.println("Zeichnen...");
-                    for(int j=0;j<koordinaten[i].length;j++){
-                        g_bi.drawImage(bildPoster, koordinaten[i][j][0]*breiteR,koordinaten[i][j][1]*hoeheR,breiteR,hoeheR,this);
-                    }
-                    bildPoster=null;
-                    System.out.println(i);
-                }catch(IOException ex){
-                    System.out.println("Fehler aufgetreten beim Lesen der Datei");
-                }             
-                
-                
               
-            }
-        }else{
-            System.out.println("Keine Bilder vorhanden!");
-        }*/
+        }
+      
         time=System.currentTimeMillis()-time;
         
         System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");    
