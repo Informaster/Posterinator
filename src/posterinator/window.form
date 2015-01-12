@@ -135,7 +135,7 @@
     </Container>
     <Component class="javax.swing.JTextField" name="jTextField1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="C:\u005cUsers\u005cArthur\u005cDocuments\u005cArthur\u005cBilder\u005cHintergrund\u005cabstract_bunt.jpg" containsInvalidXMLChars="true"/>
+        <Property name="text" type="java.lang.String" value="C:\u005cUsers\u005cArthur\u005cDocuments\u005cArthur\u005cBilder\u005cIMG_6253.jpg" containsInvalidXMLChars="true"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
     </Component>

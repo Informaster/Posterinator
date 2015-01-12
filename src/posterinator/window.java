@@ -24,7 +24,8 @@ import javax.swing.JFileChooser;
  * @author Arthur
  */
 public class window extends javax.swing.JFrame {
-    BufferedImage bi=new BufferedImage(6000,6000,BufferedImage.TYPE_INT_RGB);
+    BufferedImage bi=new BufferedImage(10,10,BufferedImage.TYPE_INT_RGB);
+    BufferedImage biOriginal=new BufferedImage(10000,10000,BufferedImage.TYPE_INT_RGB);
     String library="";  
     /**
      * Creates new form window
@@ -78,7 +79,7 @@ public class window extends javax.swing.JFrame {
             .addGap(0, 284, Short.MAX_VALUE)
         );
 
-        jTextField1.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund\\abstract_bunt.jpg");
+        jTextField1.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\IMG_6253.jpg");
         jTextField1.setToolTipText("");
 
         jTextField2.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund");
@@ -257,7 +258,7 @@ public class window extends javax.swing.JFrame {
         File f=fc.getSelectedFile();
         System.out.println("Speichern als "+f.getAbsolutePath());
         try {
-            ImageIO.write(bi, "jpg", f);
+            ImageIO.write(biOriginal, "jpg", f);
         } catch (IOException ex) {
             System.out.println("Problem beim Speichern aufgetreten!");
         }
@@ -412,9 +413,13 @@ public class window extends javax.swing.JFrame {
         for(int i=0;i<durchschnittsfarbeB.length;i++){
             bildInfo[i]=i+"#"+durchschnittsfarbeB[i];            
         }
+        
         Graphics2D g_bi=bi.createGraphics();      
         g_bi.setColor(new Color(255,255,255));
         g_bi.fillRect(0,0,bi.getWidth(),bi.getHeight());
+        Graphics2D g_biOriginal=biOriginal.createGraphics();      
+        g_biOriginal.setColor(new Color(255,255,255));
+        g_biOriginal.fillRect(0,0,biOriginal.getWidth(),biOriginal.getHeight());
         
         String[] pfad=library.split("#");
         File bilder=new File(pfad[0]);   // Lesen der geladenen Bildbibiliothek      
@@ -425,8 +430,13 @@ public class window extends javax.swing.JFrame {
         
         int breiteR=bi.getWidth()/rasterX;
         int hoeheR=bi.getHeight()/rasterY;
-        for(int i=0;i<Bildnummern.length;i++){
-           // position[i]=""+((i-(i%rasterY))/rasterY)+"-"+(i%rasterY);
+        int hoeheD=biOriginal.getHeight()/rasterY;
+        int breiteD=biOriginal.getWidth()/rasterX;
+        int raster=rasterX*rasterY;
+        int zaehler=0;
+        System.out.println("Fortschritt:");
+        
+        for(int i=0;i<Bildnummern.length;i++){            
             System.out.println("    "+i);
             if(Bildnummern[i]!=-1){ 
                 try{
@@ -436,7 +446,8 @@ public class window extends javax.swing.JFrame {
                         if(Bildnummern[i]==Bildnummern[p] &&Bildnummern[i]!=-1){
                             System.out.println("        "+p);                        
                             g_bi.drawImage(bildPoster, ((p-(p%rasterY))/rasterY)*breiteR,(p%rasterY)*hoeheR,breiteR,hoeheR,this);             
-                    
+                            g_biOriginal.drawImage(bildPoster, ((p-(p%rasterY))/rasterY)*breiteD,(p%rasterY)*hoeheD,breiteD,hoeheD,this);   
+                            zaehler++;
                             if (p!=i){
                                 Bildnummern[p]=-1;
                             }
@@ -446,7 +457,7 @@ public class window extends javax.swing.JFrame {
                 System.out.println("Fehler aufgetreten beim Lesen der Datei");
                 }
             }
-            
+            System.out.println((zaehler/raster)*100+"%");
               
         }
       
@@ -465,13 +476,13 @@ public class window extends javax.swing.JFrame {
     private void zeichnen(Graphics g){
         
         if(bi!=null){                              // wenn ein Bild geladen ist
-           int w=jPanel1.getWidth();
+          /*  int w=jPanel1.getWidth();
             int hoeheneu=bi.getHeight()*w/bi.getWidth();
             if(jPanel1.getHeight()<hoeheneu){
                 hoeheneu=jPanel1.getHeight();
-            }
-            System.out.println("Maße des Bildes original: "+bi.getWidth()+" "+bi.getHeight()+" , nach Anpassung: "+w+" "+hoeheneu);            
-            g.drawImage(bi,0 , 0, w,hoeheneu,this);
+            }*/
+           // System.out.println("Maße des Bildes original: "+bi.getWidth()+" "+bi.getHeight()+" , nach Anpassung: "+w+" "+hoeheneu);            
+            g.drawImage(bi,0 , 0, bi.getWidth(),bi.getHeight(),this);
             
         }else{                                     //wenn noch kein Bild geladen ist
             g.setColor(new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
@@ -494,7 +505,7 @@ public class window extends javax.swing.JFrame {
         int[] C=new int[3];
         System.out.println("    Deklarierung");
         System.out.println("    Berechne...");
-            for(pixelanzahl=0;pixelanzahl<Math.sqrt(breite*hoehe);pixelanzahl++){
+            for(pixelanzahl=1;pixelanzahl<Math.sqrt(breite*hoehe);pixelanzahl++){
                 int co=bi.getRGB((int)((Math.random()*breite+X)),(int)((Math.random()*hoehe+Y)));
                 Color c=new Color(co);
                 C[0]+=c.getRed();                                   // Farbwerte werden alle  addiert und ...
