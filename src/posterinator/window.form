@@ -135,13 +135,13 @@
     </Container>
     <Component class="javax.swing.JTextField" name="jTextField1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="C:\u005cUsers\u005cArthur\u005cDocuments\u005cArthur\u005cBilder\u005cIMG_6253.jpg" containsInvalidXMLChars="true"/>
+        <Property name="text" type="java.lang.String" value=" "/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextField2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="C:\u005cUsers\u005cArthur\u005cDocuments\u005cArthur\u005cBilder\u005cHintergrund" containsInvalidXMLChars="true"/>
+        <Property name="text" type="java.lang.String" value=" "/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
     </Component>

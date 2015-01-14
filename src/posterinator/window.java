@@ -25,7 +25,7 @@ import javax.swing.JFileChooser;
  */
 public class window extends javax.swing.JFrame {
     BufferedImage bi=new BufferedImage(10,10,BufferedImage.TYPE_INT_RGB);
-    BufferedImage biOriginal=new BufferedImage(10000,10000,BufferedImage.TYPE_INT_RGB);
+    BufferedImage biOriginal=new BufferedImage(14000,14000,BufferedImage.TYPE_INT_RGB);
     String library="";  
     /**
      * Creates new form window
@@ -79,10 +79,10 @@ public class window extends javax.swing.JFrame {
             .addGap(0, 284, Short.MAX_VALUE)
         );
 
-        jTextField1.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\IMG_6253.jpg");
+        jTextField1.setText(" ");
         jTextField1.setToolTipText("");
 
-        jTextField2.setText("C:\\Users\\Arthur\\Documents\\Arthur\\Bilder\\Hintergrund");
+        jTextField2.setText(" ");
         jTextField2.setToolTipText("");
 
         jTextField3.setText("10");
@@ -262,6 +262,7 @@ public class window extends javax.swing.JFrame {
         } catch (IOException ex) {
             System.out.println("Problem beim Speichern aufgetreten!");
         }
+        jLabel4.setText("Erfolgreich als "+f.getAbsolutePath()+" gespeichert!");
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -344,39 +345,13 @@ public class window extends javax.swing.JFrame {
      * Hauptprozess
      */
     private void Render(){ 
+        double time=System.currentTimeMillis();     
+        int rasterX=Integer.parseInt(jTextField3.getText());
+        int rasterY=Integer.parseInt(jTextField4.getText());           
        
-                                //Einlesen der Eingaben und Deklarierungen
         String pfadP=jTextField1.getText();
-        
-        double time=System.currentTimeMillis();
-        
-            System.out.println("Bilder werden geladen...");
-      
-        int rasterX=1;
-        int rasterY=1;          
-                                                      
-         String X=jTextField3.getText();
-         try{
-            rasterX=Integer.parseInt(X);
-            System.out.println("Erfolgreich Textfeld 3 ausgelesen! rasterX="+rasterX);
-         }catch(NumberFormatException e){
-            System.out.println("Fehler in Textfeld 3 (keine Zahl)");
-         }
-        
+        int[][] durchschnittsfarbeP=new int[rasterX*rasterY][3];       
            
-            
-         String Y=jTextField4.getText();  
-         try{
-             rasterY=Integer.parseInt(Y);
-             System.out.println("Erfolgreich Textfeld 4 ausgelesen! rasterY="+rasterY);
-         }catch(NumberFormatException e){
-             System.out.println("Fehler in Textfeld 4 (keine Zahl)");
-         }
-       
-        int[][] durchschnittsfarbeP=new int[rasterX*rasterY][3];        
-        
-            System.out.println("Deklarierung");
-        //  Hier beginnt das Lesen der Dateien
         if (pfadP!=null){                                                    //Lesen des Einzelbildes (Poster)
             try {
                 bi=ImageIO.read(new File(pfadP));      
@@ -384,54 +359,63 @@ public class window extends javax.swing.JFrame {
             } catch (IOException ex) {
                 System.out.println("Fehler aufgetreten beim Lesen der Datei");
             }
-        }
-             
-             System.out.println("Durchschnittsfarbe der Rasterkästchen berechnen");
-        
+        }     
+       
         int rasterBreite=bi.getWidth()/rasterX;
-        int rasterHoehe=bi.getHeight()/rasterY;
-             
+        int rasterHoehe=bi.getHeight()/rasterY;             
         for(int x=0;x<rasterX;x++){                   //Das Poster wird in ein Raster unterteilt, dessen Durchschnittsfarben im durchschnittsfarbeP-Array gespeichert werden
             for(int y=0;y<rasterY;y++){         
                 durchschnittsfarbeP[x*rasterY+y]=AverageColor(bi,x*rasterBreite,y*rasterHoehe,rasterBreite,rasterHoehe); //durchschnittsfarbe posterraster
                 System.out.println("  Durchschnittsfarbe Kästchen Nr. "+(x*rasterY+y)+" Koordinaten: "+x+","+y+":   "+durchschnittsfarbeP[x*rasterY+y]);
             }
-             System.out.println("Lesen von Reihe "+x+" erfolgreich");
         }
+             
+        int[][] durchschnittsfarbeB=null;
+        File[] Bild=null;
         
+        if(library==""){                      
+            Bild=(new File(jTextField2.getText())).listFiles();          
+            durchschnittsfarbeB=new int[Bild.length][3]; 
+                System.out.println("Durchschnittsfarbe der Rasterkästchen berechnen");  
+                System.out.println("Durchschnittsfarbe der Bilder berechnen");
+                System.out.println("Anzahl Bilder: "+Bild.length);
+            for(int anzahlbilder=0; anzahlbilder<Bild.length;anzahlbilder++){
+                if (Bild[anzahlbilder]!=null){
+                    try {
+                        BufferedImage biB=ImageIO.read(Bild[anzahlbilder]);  
+                        durchschnittsfarbeB[anzahlbilder]=AverageColor(biB,0,0,biB.getWidth(),biB.getHeight());  //Durchschnittsfarbe Bildbibliothekbilder         
+                        biB=null;
+                        System.out.println("Bild gelesen : "+(anzahlbilder+1)+" von "+Bild.length);
+                    } catch (IOException ex) {
+                        System.out.println("Fehler aufgetreten beim Lesen der Datei: "+(anzahlbilder+1));
+                    }
+                }           
+            }   
+        } else{         
+            String[] zeile=library.split("#");      
+            File bilder=new File(zeile[0]);   // Lesen der geladenen Bildbibiliothek      
+            Bild=bilder.listFiles(); 
+               System.out.println("Anzahl Bilder geladen: "+Bild.length); 
+            durchschnittsfarbeB=new int[zeile.length-1][3];
+            for(int i=1;i<zeile.length;i++){                
+                String[] a=zeile[i].split(",");
+                durchschnittsfarbeB[i-1][0]=Integer.parseInt(a[0]);
+                durchschnittsfarbeB[i-1][1]=Integer.parseInt(a[1]);
+                durchschnittsfarbeB[i-1][2]=Integer.parseInt(a[2]);                
+            }         
+        }        
        
-        String[] zeile=library.split("#");
-        int[][] durchschnittsfarbeB=new int[zeile.length-1][3];
-        for(int i=1;i<zeile.length;i++){                
-            String[] a=zeile[i].split(",");
-            durchschnittsfarbeB[i-1][0]=Integer.parseInt(a[0]);
-            durchschnittsfarbeB[i-1][1]=Integer.parseInt(a[1]);
-            durchschnittsfarbeB[i-1][2]=Integer.parseInt(a[2]);                
-        }                 
-        
-        String[] bildInfo=new String[durchschnittsfarbeB.length];
-        for(int i=0;i<durchschnittsfarbeB.length;i++){
-            bildInfo[i]=i+"#"+durchschnittsfarbeB[i];            
-        }
+        System.out.println("Positionszuordnung");        
         
         Graphics2D g_bi=bi.createGraphics();      
         g_bi.setColor(new Color(255,255,255));
         g_bi.fillRect(0,0,bi.getWidth(),bi.getHeight());
         Graphics2D g_biOriginal=biOriginal.createGraphics();      
         g_biOriginal.setColor(new Color(255,255,255));
-        g_biOriginal.fillRect(0,0,biOriginal.getWidth(),biOriginal.getHeight());
-        
-        String[] pfad=library.split("#");
-        File bilder=new File(pfad[0]);   // Lesen der geladenen Bildbibiliothek      
-        File[] Bild=bilder.listFiles(); 
-             System.out.println("Anzahl Bilder geladen: "+Bild.length);        
-        int[] Bildnummern=Regression(durchschnittsfarbeP,durchschnittsfarbeB); 
-        System.out.println("Positionszuordnung");
-        
-        int breiteR=bi.getWidth()/rasterX;
-        int hoeheR=bi.getHeight()/rasterY;
-        int hoeheD=biOriginal.getHeight()/rasterY;
-        int breiteD=biOriginal.getWidth()/rasterX;
+        g_biOriginal.fillRect(0,0,biOriginal.getWidth(),biOriginal.getHeight());      
+        int[] Bildnummern=Regression(durchschnittsfarbeP,durchschnittsfarbeB);  
+        int hoeheD=rasterHoehe*biOriginal.getHeight()/bi.getHeight();
+        int breiteD=rasterBreite*biOriginal.getWidth()/bi.getWidth();
         int raster=rasterX*rasterY;
         int zaehler=0;
         System.out.println("Fortschritt:");
@@ -445,7 +429,7 @@ public class window extends javax.swing.JFrame {
                     for(int p=i;p<Bildnummern.length;p++){
                         if(Bildnummern[i]==Bildnummern[p] &&Bildnummern[i]!=-1){
                             System.out.println("        "+p);                        
-                            g_bi.drawImage(bildPoster, ((p-(p%rasterY))/rasterY)*breiteR,(p%rasterY)*hoeheR,breiteR,hoeheR,this);             
+                            g_bi.drawImage(bildPoster, ((p-(p%rasterY))/rasterY)*rasterBreite,(p%rasterY)*rasterHoehe,rasterBreite,rasterHoehe,this);             
                             g_biOriginal.drawImage(bildPoster, ((p-(p%rasterY))/rasterY)*breiteD,(p%rasterY)*hoeheD,breiteD,hoeheD,this);   
                             zaehler++;
                             if (p!=i){
@@ -459,14 +443,10 @@ public class window extends javax.swing.JFrame {
             }
             System.out.println((zaehler/raster)*100+"%");
               
-        }
-      
-        time=System.currentTimeMillis()-time;
-        
+        }      
+        time=System.currentTimeMillis()-time;        
         System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");    
-        System.out.println("Dauer: "+time/(1000*60)+" Minuten");
-       
-        
+        System.out.println("Dauer: "+time/(1000*60)+" Minuten");       
     }
     
     /**
