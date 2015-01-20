@@ -8,6 +8,7 @@ package posterinator;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -25,7 +26,7 @@ import javax.swing.JFileChooser;
  */
 public class window extends javax.swing.JFrame {
     BufferedImage bi=new BufferedImage(10,10,BufferedImage.TYPE_INT_RGB);
-    BufferedImage biOriginal=new BufferedImage(14000,14000,BufferedImage.TYPE_INT_RGB);
+    BufferedImage biOriginal=null;
     String library="";  
     /**
      * Creates new form window
@@ -76,7 +77,7 @@ public class window extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 284, Short.MAX_VALUE)
+            .addGap(0, 270, Short.MAX_VALUE)
         );
 
         jTextField1.setText(" ");
@@ -219,14 +220,17 @@ public class window extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4))
+                .addComponent(jLabel4)
+                .addGap(14, 14, 14))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        
+        //"Bild wählen"
+        //Öffnet ein Fenster zum Wählen des Bildes, was als Poster dargestellt werden soll
         final JFileChooser fc = new JFileChooser();
         fc.setCurrentDirectory(new File("/"));
         int zahl = fc.showOpenDialog(this);
@@ -235,7 +239,9 @@ public class window extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        
+        //"Bildbibliothek wählen"
+        //Öffnet ein Fenster zum Wählen eines Ordners mit Bildern
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY );
         fc.setCurrentDirectory(new File("/"));
@@ -245,13 +251,16 @@ public class window extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        Render();
-        jPanel1.repaint();
+        
+        //"Poster erstellen" 
+        Render(); //erstellt das Poster
+        jPanel1.repaint(); 
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        
+        //"Bild speichern"
+        //Das erstellte Poster wird gespeichert
         final JFileChooser fc = new JFileChooser();
         fc.setCurrentDirectory(new File("/"));
         int zahl = fc.showOpenDialog(this);  
@@ -266,7 +275,9 @@ public class window extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+        
+        //"Bildbibliothek speichern"
+        //Der String "library" der beim Lesen der Bildbibliothek erstellt wird, wird als txt-Datei gespeichert
         final JFileChooser fc = new JFileChooser();
         fc.setCurrentDirectory(new File("/"));
         int zahl = fc.showOpenDialog(this);   
@@ -274,7 +285,7 @@ public class window extends javax.swing.JFrame {
             
         try{         
             PrintWriter pWriter=new PrintWriter(new BufferedWriter(new FileWriter(f.getAbsolutePath()+".txt"))); 
-            pWriter.println(library); 
+            pWriter.println(library);            //Die gesamte Datei besteht aus (oft sehr langen) einer Zeile
             if (pWriter != null){ 
                 pWriter.flush(); 
                 pWriter.close(); 
@@ -290,7 +301,10 @@ public class window extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        
+        //"Bildbibliothek laden"
+        //Jedes Bild der Bildbibliothek wird geladen, seine Durchschnittsfarbe wird berechnet
+        //Diese Daten werden in "library" gespeichert
         String pfadB=jTextField2.getText();  
         File bilder=new File(pfadB);   // Lesen der Bildbibiliothek      
         File[] Bild=bilder.listFiles();
@@ -325,8 +339,10 @@ public class window extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-        final JFileChooser fc = new JFileChooser();
+        
+        //"Bildbibliothek laden"
+        //Der Inhalt der txt-Datei (aus einer Zeile bestehend) wird in "library" gespeichert
+        final JFileChooser fc = new JFileChooser();      
         fc.setCurrentDirectory(new File("/"));
         int zahl = fc.showOpenDialog(this);
         File f=fc.getSelectedFile();
@@ -345,8 +361,8 @@ public class window extends javax.swing.JFrame {
      * Hauptprozess
      */
     private void Render(){ 
-        double time=System.currentTimeMillis();     
-        int rasterX=Integer.parseInt(jTextField3.getText());
+        double time=System.currentTimeMillis();      //Die Zeit wird sowohl zu Beginn des Rechnens als auch am Ende gemessen. Die Dauer wird am Ende angegeben
+        int rasterX=Integer.parseInt(jTextField3.getText());  //Raster, in das das Bild unterteilt wird
         int rasterY=Integer.parseInt(jTextField4.getText());           
        
         String pfadP=jTextField1.getText();
@@ -354,7 +370,10 @@ public class window extends javax.swing.JFrame {
            
         if (pfadP!=null){                                                    //Lesen des Einzelbildes (Poster)
             try {
-                bi=ImageIO.read(new File(pfadP));      
+                bi=ImageIO.read(new File(pfadP));    
+                Image scaledBi=bi.getScaledInstance(((int)(bi.getWidth()/rasterX))*rasterX,((int)(bi.getHeight()/rasterY))*rasterY,Image.SCALE_SMOOTH);
+                bi=new BufferedImage(scaledBi.getWidth(null),scaledBi.getHeight(null),BufferedImage.TYPE_INT_RGB);
+                bi.getGraphics().drawImage(scaledBi, 0, 0, null);
                 System.out.println("Poster gelesen");
             } catch (IOException ex) {
                 System.out.println("Fehler aufgetreten beim Lesen der Datei");
@@ -365,16 +384,16 @@ public class window extends javax.swing.JFrame {
         int rasterHoehe=bi.getHeight()/rasterY;             
         for(int x=0;x<rasterX;x++){                   //Das Poster wird in ein Raster unterteilt, dessen Durchschnittsfarben im durchschnittsfarbeP-Array gespeichert werden
             for(int y=0;y<rasterY;y++){         
-                durchschnittsfarbeP[x*rasterY+y]=AverageColor(bi,x*rasterBreite,y*rasterHoehe,rasterBreite,rasterHoehe); //durchschnittsfarbe posterraster
+                durchschnittsfarbeP[x*rasterY+y]=AverageColor(bi,x*rasterBreite,y*rasterHoehe,rasterBreite,rasterHoehe); 
                 System.out.println("  Durchschnittsfarbe Kästchen Nr. "+(x*rasterY+y)+" Koordinaten: "+x+","+y+":   "+durchschnittsfarbeP[x*rasterY+y]);
             }
         }
              
-        int[][] durchschnittsfarbeB=null;
+        int[][] durchschnittsfarbeB=null;              //Hier wird der Array der Durchschnittsfarben der Bildbibliothek gespeichert
         File[] Bild=null;
         
-        if(library==""){                      
-            Bild=(new File(jTextField2.getText())).listFiles();          
+        if(library==""){                                             //Entweder es wird direkt eine Bibliothek Bild für Bild eingelesen
+            Bild=(new File(jTextField2.getText())).listFiles();          //Dann wird jedes einzelne Bild geladen und dessen Durchschnittsfarbe berechnet und gespeichert...
             durchschnittsfarbeB=new int[Bild.length][3]; 
                 System.out.println("Durchschnittsfarbe der Rasterkästchen berechnen");  
                 System.out.println("Durchschnittsfarbe der Bilder berechnen");
@@ -383,7 +402,7 @@ public class window extends javax.swing.JFrame {
                 if (Bild[anzahlbilder]!=null){
                     try {
                         BufferedImage biB=ImageIO.read(Bild[anzahlbilder]);  
-                        durchschnittsfarbeB[anzahlbilder]=AverageColor(biB,0,0,biB.getWidth(),biB.getHeight());  //Durchschnittsfarbe Bildbibliothekbilder         
+                        durchschnittsfarbeB[anzahlbilder]=AverageColor(biB,0,0,biB.getWidth(),biB.getHeight());    
                         biB=null;
                         System.out.println("Bild gelesen : "+(anzahlbilder+1)+" von "+Bild.length);
                     } catch (IOException ex) {
@@ -391,9 +410,9 @@ public class window extends javax.swing.JFrame {
                     }
                 }           
             }   
-        } else{         
+        } else{                                                  //... oder eine Bibliothek, die schon als txt-Datei vorhanden ist, wird geladen (Geht schneller)
             String[] zeile=library.split("#");      
-            File bilder=new File(zeile[0]);   // Lesen der geladenen Bildbibiliothek      
+            File bilder=new File(zeile[0]);  
             Bild=bilder.listFiles(); 
                System.out.println("Anzahl Bilder geladen: "+Bild.length); 
             durchschnittsfarbeB=new int[zeile.length-1][3];
@@ -405,7 +424,15 @@ public class window extends javax.swing.JFrame {
             }         
         }        
        
-        System.out.println("Positionszuordnung");        
+        System.out.println("Positionszuordnung");     
+        
+        
+        
+        int width=12000;                                                   //Das hier ist nötig, damit das richtige Seitenverhältnis und ein voll gezeichnetes Bild entstehen kann
+        int height=12000*bi.getHeight()/bi.getWidth();        
+        width=((int)(width/rasterX))*rasterX;
+        height=((int)(height/rasterY))*rasterY;       
+        biOriginal=new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
         
         Graphics2D g_bi=bi.createGraphics();      
         g_bi.setColor(new Color(255,255,255));
@@ -414,23 +441,23 @@ public class window extends javax.swing.JFrame {
         g_biOriginal.setColor(new Color(255,255,255));
         g_biOriginal.fillRect(0,0,biOriginal.getWidth(),biOriginal.getHeight());      
         int[] Bildnummern=Regression(durchschnittsfarbeP,durchschnittsfarbeB);  
-        int hoeheD=rasterHoehe*biOriginal.getHeight()/bi.getHeight();
-        int breiteD=rasterBreite*biOriginal.getWidth()/bi.getWidth();
+        int hoeheD=biOriginal.getHeight()/rasterY;
+        int breiteD=biOriginal.getWidth()/rasterX;
         int raster=rasterX*rasterY;
         int zaehler=0;
         System.out.println("Fortschritt:");
-        
+        //---- Ab hier wird gezeichnet
         for(int i=0;i<Bildnummern.length;i++){            
-            System.out.println("    "+i);
+           // System.out.println("    "+i);
             if(Bildnummern[i]!=-1){ 
                 try{
                     BufferedImage bildPoster=ImageIO.read(Bild[Bildnummern[i]]);
                     
                     for(int p=i;p<Bildnummern.length;p++){
                         if(Bildnummern[i]==Bildnummern[p] &&Bildnummern[i]!=-1){
-                            System.out.println("        "+p);                        
-                            g_bi.drawImage(bildPoster, ((p-(p%rasterY))/rasterY)*rasterBreite,(p%rasterY)*rasterHoehe,rasterBreite,rasterHoehe,this);             
-                            g_biOriginal.drawImage(bildPoster, ((p-(p%rasterY))/rasterY)*breiteD,(p%rasterY)*hoeheD,breiteD,hoeheD,this);   
+                           // System.out.println("        "+p);                        
+                            g_bi.drawImage(bildPoster, ((p-(p%rasterY))/rasterY)*rasterBreite,(p%rasterY)*rasterHoehe,rasterBreite,rasterHoehe,this);  //Zeichnen in jPanel1            
+                            g_biOriginal.drawImage(bildPoster, ((p-(p%rasterY))/rasterY)*breiteD,(p%rasterY)*hoeheD,breiteD,hoeheD,this);   // Zeichnen in das grosse BufferedImage als jpg-Datei
                             zaehler++;
                             if (p!=i){
                                 Bildnummern[p]=-1;
@@ -441,12 +468,12 @@ public class window extends javax.swing.JFrame {
                 System.out.println("Fehler aufgetreten beim Lesen der Datei");
                 }
             }
-            System.out.println((zaehler/raster)*100+"%");
-              
+            System.out.println((int)((zaehler*100)/raster)+"%");
+           
         }      
-        time=System.currentTimeMillis()-time;        
+        time=System.currentTimeMillis()-time;        //Zeitangabe
         System.out.println("Erfolgreich!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");    
-        System.out.println("Dauer: "+time/(1000*60)+" Minuten");       
+        System.out.println("Dauer: "+time/(1000*60)+" Minuten ");       
     }
     
     /**
@@ -456,12 +483,6 @@ public class window extends javax.swing.JFrame {
     private void zeichnen(Graphics g){
         
         if(bi!=null){                              // wenn ein Bild geladen ist
-          /*  int w=jPanel1.getWidth();
-            int hoeheneu=bi.getHeight()*w/bi.getWidth();
-            if(jPanel1.getHeight()<hoeheneu){
-                hoeheneu=jPanel1.getHeight();
-            }*/
-           // System.out.println("Maße des Bildes original: "+bi.getWidth()+" "+bi.getHeight()+" , nach Anpassung: "+w+" "+hoeheneu);            
             g.drawImage(bi,0 , 0, bi.getWidth(),bi.getHeight(),this);
             
         }else{                                     //wenn noch kein Bild geladen ist
@@ -478,7 +499,7 @@ public class window extends javax.swing.JFrame {
      * @param Y links oben y-Koordinate des Ausschnitts
      * @param breite Breite des Ausschnitts
      * @param hoehe Höhe des Ausschnitts
-     * @return die Durchschnittsfarbe als int array
+     * @return die Durchschnittsfarbenwerte als int array
      */    
     private int[] AverageColor(BufferedImage bi,int X,int Y,int breite, int hoehe){   
         int pixelanzahl=0;  
@@ -523,8 +544,8 @@ public class window extends javax.swing.JFrame {
     
     /**nächster Vektor einer Gruppe zu einem anderen Vektor
      * 
-     * @param a entspricht der Durchschnittsfarbe eines Rasterkästchens des Posters   
-     * @param b entspricht allen Durchschnittsfarben der Bilder aus der Bildbibliothek
+     * @param a entspricht EINER Durchschnittsfarbe eines Rasterkästchens des Posters   
+     * @param b entspricht ALLEN Durchschnittsfarben der Bilder aus der Bildbibliothek
      * @return Nummer des nächstgelegenen Vektors zu a
      */ 
     private int kleinsterAbstand(int[]a, int[][]b){ //berechnet den kleinsten Abstand einer Vektorengruppe und einem Bezugsvektor
