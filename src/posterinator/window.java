@@ -372,8 +372,8 @@ public class window extends javax.swing.JFrame {
             try {
                 bi=ImageIO.read(new File(pfadP));    
                 Image scaledBi=bi.getScaledInstance(((int)(bi.getWidth()/rasterX))*rasterX,((int)(bi.getHeight()/rasterY))*rasterY,Image.SCALE_SMOOTH);
-                bi=new BufferedImage(scaledBi.getWidth(null),scaledBi.getHeight(null),BufferedImage.TYPE_INT_RGB);
-                bi.getGraphics().drawImage(scaledBi, 0, 0, null);
+                bi=new BufferedImage(scaledBi.getWidth(null),scaledBi.getHeight(null),BufferedImage.TYPE_INT_RGB);                 //Das BufferedImage wird so skaliert, dass Höhe und Breite jeweils ein Vielfaches von rasterX und rasterY sind
+                bi.getGraphics().drawImage(scaledBi, 0, 0, null);                                                                  //Somit wird kein Rand abgeschnitten
                 System.out.println("Poster gelesen");
             } catch (IOException ex) {
                 System.out.println("Fehler aufgetreten beim Lesen der Datei");
